@@ -14,7 +14,7 @@ const LoginScreen = () => {
   const navigation:any=useNavigation();
 
   const goToSurvey=()=>{
-    navigation.navigate("Form")
+    navigation.navigate("UserTypeScreens")
 
   }
 
