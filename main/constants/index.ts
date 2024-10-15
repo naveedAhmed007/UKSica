@@ -1,3 +1,3 @@
 import headings from "./headings";
-
-export {headings}
+import placeholders from "./placeHolders";
+export {headings,placeholders}

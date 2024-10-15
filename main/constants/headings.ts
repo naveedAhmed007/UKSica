@@ -12,6 +12,20 @@ const headings={
     ManagerDetails:'Manager Details',
     ManagerName:'Manager Name',
     position:'Position',
-    awareOf:"Manager Aware of Security Proc?"
+    awareOf:"Manager Aware of Security Proc?",
+    GDPRCompliance:"GDPR Compliance",
+    IsGDPRController:'Is GDPR Controller Information Available?',
+    IsCCTVWarning:"CCTV Warning Sign Displayed?",
+    FollowUpRequired: "Follow-up Required",
+    AreIssues: "Any Issues That Require Immediate Attention?",    
+    SecurityRating: "Overall Security Rating", 
+    Isthereinformation:"Visible information?",
+    securityGraudBehavior:"Security Guards' Behaviour and Professionalis?",
+    GeneralObservations:'General Observations',
+    AdditionalObservations:"Additional Observations",
+    ResponseTimeOfGuards:"Response Time of Guards to Issues",
+    securityRating:"Overall Security Rating",
+    addphotos:'Add Relevant Photos'
+    
 }
 export default headings;
