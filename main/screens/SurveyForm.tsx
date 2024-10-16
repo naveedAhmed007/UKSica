@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CustomText from "../components/CustomText";
 import Header from "../components/Header";
 import CustomInput from "../components/CustomInput";
@@ -13,12 +13,22 @@ import {
   uuid, View
 } from "../utils/imports";
 import CustomTextInput from "../components/CustomInput";
-import { Dimensions } from "react-native";
+import { Dimensions, Text } from "react-native";
+import SignatureModal from "../components/SignBoard";
+import { useIsFocused } from "@react-navigation/native";
+import { postData } from "../apis/ApiServices";
+import { endpoints } from "../apis/endPoints";
 
 const SurveyForm = () => {
+ const isFocused:any=useIsFocused();
+  
   const [value, setValue] = useState<string>("");
-  const [errorName, setErrorName] = useState<boolean>(false);
+
+  const [errorName, setErrorName] = useState<string>("");
+  const [storeName, setStoreName] = useState<string>("");
+  const [errorStoreName, setErroStorerName] = useState<boolean>(false);
   const [errorNameText, setErrorNameText] = useState<string>("");
+  
   const [showPicker, setShowPicker] = useState(false);
   const [selectedPickerValue, setSelectedPickerValue] = useState<string>("1");
   const [selectedGuardBehavior, setSelectedGuardBehavior] = useState<string>("");
@@ -37,11 +47,21 @@ const SurveyForm = () => {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState<any>([]);
+  const [modalSignVisible, setModalSignVisible] = useState(false);
+  const [signature, setSignature] = useState<string | null>(null);
+
+  const handleSaveSignature = (signature: string) => {
+    setSignature(signature);
+    setModalSignVisible(false)
+
+
+  };
 
 
   const openGallery = () => {
     setIsModalVisible(false)
     launchImageLibrary({ mediaType: 'photo', quality: 1 }, (response: ImagePickerResponse) => {
+
       if (!response.didCancel && response.assets) {
         setSelectedImages((prevImages: any) => [...prevImages, { url: response?.assets[0]?.uri, id: uuid.v4() }]);
 
@@ -81,6 +101,11 @@ const SurveyForm = () => {
     setIsModalVisible(!isModalVisible)
 
   }, [isModalVisible])
+  const addSignature = useCallback(() => {
+    setModalSignVisible(!modalSignVisible)
+
+  }, [modalSignVisible])
+
 
   const renderAddImageButton = () => (
     <TouchableOpacity
@@ -97,7 +122,7 @@ const SurveyForm = () => {
         <CustomTextInput
           placeholder={placeholders.addPhotos}
           pointerEvents="none"
-          value={value}
+          value={""}
           onChangeText={() => { }}
           error={false}
           backgroundColor={colors.white}
@@ -210,10 +235,13 @@ const SurveyForm = () => {
     <View style={styles.container}>
 
 
-      <Header title={headings.UKSICAForm} />
+      <Header title={headings.UKSICAForm}
+      onBackPress={()=>{}}
+      />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollView}
         extraHeight={100}
+        showsVerticalScrollIndicator={false}
       >
 
         {/* Category: Store Information */}
@@ -657,29 +685,78 @@ const SurveyForm = () => {
 
 
             <View style={styles.formGroup}>
-                <CustomText
-                  title={headings.securityRating}
-                  color={colors.gray}
-                  fontSize={fonts.p}
-                  fontWeight="400"
-                  marginBottom={10}
-                />
+              <CustomText
+                title={headings.securityRating}
+                color={colors.gray}
+                fontSize={fonts.p}
+                fontWeight="400"
+                marginBottom={10}
+              />
 
-                <CustomNumberPicker
-                  onPress={toggleRatingBehavior}
-                  value={selectedRating}
-                  text={placeholders.OverallSecurityRating}
-                />
-
-
+              <CustomNumberPicker
+                onPress={toggleRatingBehavior}
+                value={selectedRating}
+                text={placeholders.OverallSecurityRating}
+              />
 
 
-              </View>
+
+
+            </View>
+
+            <View style={styles.formGroup}>
+              <CustomText
+                title={headings.addSignature}
+                color={colors.gray}
+                fontSize={fonts.p}
+                fontWeight="400"
+                marginBottom={10}
+              />
+              {signature ?
+              <TouchableOpacity onPress={addSignature}>
+               <Image
+               source={{ uri: signature }} 
+               style={styles.signatureImage}
+               resizeMode="contain"
+               
+             />
+            </TouchableOpacity>
+             
+              :
+
+                <TouchableOpacity onPress={addSignature} style={{ flex: 1 }}>
+
+                  <CustomTextInput
+                    placeholder={placeholders.addSignature}
+                    pointerEvents="none"
+                    value={value}
+                    onChangeText={() => { }}
+                    error={false}
+                    backgroundColor={colors.white}
+                    borderRadius={10}
+                    paddingLeft={10}
+                    paddingRight={10}
+                    paddingTop={10}
+                    paddingBottom={10}
+                    borderColor={colors.TextInputBorderColor}
+                    borderWidth={1}
+                    editable={false}
+                    color={colors.black}
+                  />
+                </TouchableOpacity>
+}
+            </View>
+
+
 
 
 
 
           </View>
+
+          <TouchableOpacity style={styles.submitButton}>
+        <Text style={styles.submitButtonText}>Submit Form</Text>
+      </TouchableOpacity>
 
 
 
@@ -727,6 +804,11 @@ const SurveyForm = () => {
         openGallery={openGallery}
 
       />
+      <SignatureModal
+        isVisible={modalSignVisible}
+        onClose={() => setModalSignVisible(false)}
+        onSaveSignature={handleSaveSignature}
+      />
     </View>
   );
 };
@@ -735,7 +817,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.surveyFormBackground,
-    paddingHorizontal: moderateScale(20),
+   paddingHorizontal: moderateScale(20),
   },
   scrollView: {
     flexGrow: 1, // Ensure the content is scrollable
@@ -799,7 +881,26 @@ const styles = StyleSheet.create({
     width: moderateScale(80),
     borderColor: "#D3D3D3",
   },
-
+  signatureImage: {
+    width: "100%",
+    height: moderateScale(150),
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: moderateScale(10),
+    marginBottom: moderateScale(15),
+  },
+  submitButton: {
+    backgroundColor: '#000080',
+    paddingVertical: moderateScale(15),
+    borderRadius: moderateScale(8),
+    alignItems: 'center',
+    marginBottom: moderateScale(20),
+  },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: moderateScale(18),
+    fontWeight: 'bold',
+  },
 
 });
 

@@ -10,5 +10,6 @@ const placeholders={
     OverallSecurityRating:"Security rating",
     additionObsevation:"additional obsevations (if any)",
     addPhotos:"Add photos",
+    addSignature:"Add Signature",
 }
 export default placeholders;

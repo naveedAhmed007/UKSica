@@ -25,7 +25,8 @@ const headings={
     AdditionalObservations:"Additional Observations",
     ResponseTimeOfGuards:"Response Time of Guards to Issues",
     securityRating:"Overall Security Rating",
-    addphotos:'Add Relevant Photos'
+    addphotos:'Add Relevant Photos',
+    addSignature:'Add Signature',
     
 }
 export default headings;
