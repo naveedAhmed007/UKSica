@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent:'center',
     marginHorizontal: moderateScale(-20),
+
   },
   backButton: {
     position: 'absolute',

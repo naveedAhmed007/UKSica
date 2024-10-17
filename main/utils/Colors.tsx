@@ -7,4 +7,5 @@ export const colors={
     surveyFormBackground:"#f0f8ff",
     gray:'#333',
     TextInputBorderColor:"#ccc",
+    errorColorCode:"#B22222",
 }

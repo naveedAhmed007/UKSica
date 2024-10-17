@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomText from "../components/CustomText";
 import Header from "../components/Header";
 import CustomInput from "../components/CustomInput";
@@ -13,24 +13,40 @@ import {
   uuid, View
 } from "../utils/imports";
 import CustomTextInput from "../components/CustomInput";
-import { Dimensions, Text } from "react-native";
+import { Alert, Dimensions, Text } from "react-native";
 import SignatureModal from "../components/SignBoard";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { postData } from "../apis/ApiServices";
 import { endpoints } from "../apis/endPoints";
 
 const SurveyForm = () => {
- const isFocused:any=useIsFocused();
-  
+  const isFocused: any = useIsFocused();
+
   const [value, setValue] = useState<string>("");
 
   const [errorName, setErrorName] = useState<string>("");
+
   const [storeName, setStoreName] = useState<string>("");
-  const [errorStoreName, setErroStorerName] = useState<boolean>(false);
-  const [errorNameText, setErrorNameText] = useState<string>("");
+  const [ManagerName, setManagerName] = useState<string>("");
+  const [position, setPosition] = useState<string>("");
   
+  const [errorStoreName, setErroStoreName] = useState<boolean>(false);
+ 
+  const [address, setAddress] = useState<string>("");
+  const [errorAddress, setErrorAddress] = useState<boolean>(false);
+ 
+  const [errorNameText, setErrorNameText] = useState<string>("");
+  const [siaNames, setSIANames] = useState<string>("");
+  const [attention, setAttention] = useState<string>("");
+  const navigation:any=useNavigation();
+ 
+  const scrollViewRef:any = useRef(null);
+  const storeNameRef:any = useRef(null); 
+
   const [showPicker, setShowPicker] = useState(false);
-  const [selectedPickerValue, setSelectedPickerValue] = useState<string>("1");
+  const [showPicker1, setShowPicker1] = useState(false);
+  const [selectedPickerValue, setSelectedPickerValue] = useState<string>("");
+  const [selectedPickerValue1, setSelectedPickerValue1] = useState<string>("");
   const [selectedGuardBehavior, setSelectedGuardBehavior] = useState<string>("");
   const [selectedResponse, setSelectedResponse] = useState<string>("");
   const [selectedRating, setSelectedRating] = useState<string>("");
@@ -38,6 +54,7 @@ const SurveyForm = () => {
   const [showResponseOptions, setShowResponseOptions] = useState<boolean>(false);
   const [showRatingOptions, setShowRatingOptions] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<string>("Yes");
+  const [selectedAware, setSelectedAware] = useState<string>("Yes");
   const [selectedLogo, setSelectedLogo] = useState<string>('Yes');
   const [selectedGDPR, setSelectedGDPR] = useState<string>('Yes');
   const [selectedCCTV, setSelectedCCTV] = useState<string>('Yes');
@@ -58,12 +75,137 @@ const SurveyForm = () => {
   };
 
 
+
+  
+  
+  
+   // Function to scroll to a specific view
+   
+
+   
+  const submitForm=useCallback(async()=>{
+    // console.log("storeNmae=======",storeName)
+    // console.log("storeAddress=======",address)
+    // console.log("No of assles=========",selectedPickerValue)
+    // console.log("No of guards=========",selectedPickerValue1)
+    // console.log("sia badg",selectedValue)
+    // console.log("logo",selectedLogo)
+    // console.log("names and sia",siaNames)
+    
+    // console.log("mName=========",ManagerName)
+    // console.log("position=========",position)
+    // console.log("aware=========",selectedAware)
+    
+    // console.log("gdpr=========",selectedGDPR)
+    // console.log("cctv=========",selectedCCTV)
+    // console.log("info=========",selectedInfo)
+    
+    // console.log("behavior=====",selectedGuardBehavior)
+    // console.log("responseTime======",selectedResponse)
+    // console.log("additional=========",additionalDetails)
+    
+    // console.log("issues=========",selectedIssues)
+    // console.log("attention======",attention)
+    // console.log("security=======",selectedRating)
+    
+
+ 
+
+
+
+    if(storeName.trim().length<=0 || address.trim().length<=0 || selectedPickerValue1.length<=0){
+
+    Alert.alert("please fill out required fields") 
+
+
+    }
+    else{
+      const mappedImages:any = mapImagesToFields(selectedImages);
+     
+      const formDataFields = {
+        StoreName: storeName,
+        Address: address,
+        Size_Of_Store: selectedPickerValue,
+        Number_of_Security_Guards_Onsite: selectedPickerValue1,
+        SIA_Badge_Visible_on_first_guard: "Y",
+        Company_Brand_Logo_Visible_on_Guard: "Y",
+        Names_and_SIA_number_of_Guards: siaNames,
+        Manager_Person_Spoken_To: ManagerName,
+        Position: position,
+        Was_the_Manager_Person_aware_of_Security_Proc: "N",
+        Is_GDPR_Controller_Information_Available_Onsite: "C",
+        Is_the_CCTV_Warning_Sign_Displayed: "P",
+        Is_there_visible_information_on_data_collection: "Y",
+        Security_Guards_Behavior_and_Professionalism: "E",
+        Response_Time_of_Guards_to_Issues: "D",
+        Additional_Observations: additionalDetails,
+        Are_There_Any_Issues: "Y",
+        Issues_Details: attention,
+        Overall_Security_Rating: "E",
+        Auditor_Name: "Bilal",
+        Relevant_Photo_File1: mappedImages.Relevant_Photo_File2,
+        Relevant_Photo_File2: mappedImages.Relevant_Photo_File3,
+        Relevant_Photo_File3: mappedImages.Relevant_Photo_File2,
+         };
+         
+
+
+      
+      
+      const result:any = await postData(endpoints.AddAuditDetails, formDataFields);
+       if(result){
+        navigation.navigate("UserTypeScreens")
+
+
+       }
+       else{
+        console.log("ssssssssssss")
+       }
+   
+    }
+  
+  },[storeName,address,selectedPickerValue,selectedPickerValue1,selectedLogo,
+    siaNames,selectedValue,ManagerName,position,selectedAware,
+  selectedGDPR,selectedCCTV,selectedInfo,selectedGuardBehavior,selectedResponse,additionalDetails,
+selectedIssues,attention,selectedRating,selectedImages  
+])
+const mapImagesToFields = (selectedImages:any) => {
+  // Define the fields for mapping
+  const fields = [
+    "Relevant_Photo_File1",
+    "Relevant_Photo_File2",
+    "Relevant_Photo_File3",
+  ];
+
+  // Map over the selected images and assign them to fields
+  const mappedImages = fields.reduce((acc, field, index) => {
+    if (selectedImages[index]) {
+      acc[field] = {
+        uri: selectedImages[index].url,
+        name: selectedImages[index].name,
+        type: selectedImages[index].type,
+      };
+    }
+    return acc;
+  }, {});
+
+  return mappedImages;
+};
+
+
   const openGallery = () => {
     setIsModalVisible(false)
     launchImageLibrary({ mediaType: 'photo', quality: 1 }, (response: ImagePickerResponse) => {
 
+
       if (!response.didCancel && response.assets) {
-        setSelectedImages((prevImages: any) => [...prevImages, { url: response?.assets[0]?.uri, id: uuid.v4() }]);
+        setSelectedImages((prevImages: any) => [...prevImages, {
+           url: response?.assets[0]?.uri, 
+           id: uuid.v4(),
+          name:response?.assets[0]?.fileName,
+          type:response?.assets[0]?.type,
+        
+        }]);
 
 
       }
@@ -75,7 +217,13 @@ const SurveyForm = () => {
     launchCamera({ mediaType: 'photo', quality: 1 }, (response: ImagePickerResponse) => {
       if (!response.didCancel && response.assets) {
 
-        setSelectedImages((prevImages: any) => [...prevImages, { url: response?.assets[0]?.uri, id: uuid.v4() }]);
+        setSelectedImages((prevImages: any) => [...prevImages, {
+          url: response?.assets[0]?.uri, 
+          id: uuid.v4(),
+         name:response?.assets[0]?.fileName,
+         type:response?.assets[0]?.type,
+       
+       }]);
 
 
       }
@@ -171,6 +319,9 @@ const SurveyForm = () => {
   const handlePress = useCallback((value: string) => {
     setSelectedValue(value)
   }, [selectedValue])
+  const handleAware = useCallback((value: string) => {
+    setSelectedAware(value)
+  }, [selectedAware])
   const handleLogo = useCallback((value: string) => {
     setSelectedLogo(value)
   }, [selectedLogo])
@@ -190,13 +341,67 @@ const SurveyForm = () => {
 
 
   const onChangeText = useCallback((newText: string) => {
-    setValue(newText);
-  }, [value]);
+    if (newText.trim().length <= 0) {
+      setErroStoreName(true)
+    }
+    else {
+      setErroStoreName(false)
+    }
+    setStoreName(newText)
+
+  }, [storeName, errorStoreName]);
+  const onChangeAddress = useCallback((newText: string) => {
+    if (newText.trim().length <= 0) {
+      setErroStoreName(true)
+    }
+    else {
+      setErroStoreName(false)
+    }
+    setAddress(newText)
+
+  }, [storeName, address]);
+
+
+  const onChangeName = useCallback((newText: string) => {
+    if (newText.trim().length <= 0) {
+      setErroStoreName(true)
+    }
+    else {
+      setErroStoreName(false)
+    }
+    setManagerName(newText)
+
+  }, [ManagerName, errorStoreName]);
+  const onChangePosition = useCallback((newText: string) => {
+    if (newText.trim().length <= 0) {
+      setErroStoreName(true)
+    }
+    else {
+      setErroStoreName(false)
+    }
+    setPosition(newText)
+
+  }, [position, errorStoreName]);
+  const onChangeNamesSIA = useCallback((newText: string) => {
+    if (newText.trim().length <= 0) {
+      setErroStoreName(true)
+    }
+    else {
+      setErroStoreName(false)
+    }
+    setSIANames(newText)
+
+  }, [ siaNames,errorStoreName]);
+ 
+
 
   const items: string[] = Array.from({ length: 100 }, (_, index) => (index + 1).toString());
 
   const togglePicker = () => {
     setShowPicker(!showPicker);
+  };
+  const togglePicker1 = () => {
+    setShowPicker1(!showPicker1);
   };
   const toggleGuardBehavior = useCallback(() => {
     setGuardBehavior(!guardBehavior)
@@ -217,6 +422,11 @@ const SurveyForm = () => {
     setSelectedPickerValue(value);
     setShowPicker(!showPicker);
   }, [selectedPickerValue, showPicker, setSelectedPickerValue]);
+  const done1 = useCallback((value: string) => {
+    setSelectedPickerValue1(value);
+    setShowPicker1(!showPicker1);
+  }, [selectedPickerValue1, showPicker1, setSelectedPickerValue1]);
+  
   const doneGuardBehavior = useCallback((value: string) => {
     setSelectedGuardBehavior(value);
     setGuardBehavior(!guardBehavior);
@@ -228,7 +438,7 @@ const SurveyForm = () => {
 
   const doneRating = useCallback((value: string) => {
     setSelectedRating(value);
-    setShowRatingOptions(!showResponseOptions);
+    setShowRatingOptions(!showRatingOptions);
   }, [selectedRating, showRatingOptions, setShowRatingOptions]);
 
   return (
@@ -236,14 +446,18 @@ const SurveyForm = () => {
 
 
       <Header title={headings.UKSICAForm}
-      onBackPress={()=>{}}
+        onBackPress={() => { navigation.navigate("UserTypeScreens")}}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollView}
         extraHeight={100}
+        ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
       >
+        <View ref={storeNameRef}>
 
+        <TextInput/>
+        </View>
         {/* Category: Store Information */}
         <View>
           <CustomText
@@ -252,7 +466,7 @@ const SurveyForm = () => {
             fontSize={fonts.h2}
             marginBottom={20}
             fontWeight="bold"
-            marginTop={10}
+            marginTop={-20}
           />
 
           <View style={styles.formGroup}>
@@ -275,9 +489,19 @@ const SurveyForm = () => {
               borderColor={colors.TextInputBorderColor}
               borderWidth={1}
               onChangeText={onChangeText}
-              value={value}
-              error={errorName}
+              value={storeName}
+              error={false}
             />
+            {/* {errorStoreName==true && 
+              <CustomText
+              title={placeholders.EnterStoreName}
+              color={colors.errorColorCode}
+              fontSize={fonts.p}
+              fontWeight="400"
+              marginLeft={5}
+              marginBottom={5}
+            />
+} */}
           </View>
 
           <View style={styles.formGroup}>
@@ -299,9 +523,9 @@ const SurveyForm = () => {
               paddingBottom={10}
               borderColor={colors.TextInputBorderColor}
               borderWidth={1}
-              onChangeText={onChangeText}
-              value={value}
-              error={errorName}
+              onChangeText={onChangeAddress}
+              value={address}
+              error={false}
             />
           </View>
 
@@ -340,9 +564,9 @@ const SurveyForm = () => {
                 marginBottom={5}
               />
               <CustomNumberPicker
-                onPress={togglePicker}
-                value={selectedPickerValue}
-                text={placeholders.EnterNumberOfAisles}
+                onPress={togglePicker1}
+                value={selectedPickerValue1}
+                text={placeholders.EnterNumberOfSecurityGuards}
               />
 
             </View>
@@ -379,8 +603,35 @@ const SurveyForm = () => {
               />
 
 
+
+
             </View>
 
+
+            <View style={styles.formGroup}>
+            <CustomText
+              title={"Names and SIA number of Guards"}
+              color={colors.gray}
+              fontSize={fonts.p}
+              fontWeight="400"
+              marginBottom={5}
+            />
+
+            <CustomInput
+              placeholder={"Enter names and SIA number"}
+              backgroundColor={colors.white}
+              borderRadius={10}
+              paddingLeft={10}
+              paddingRight={10}
+              paddingTop={10}
+              paddingBottom={10}
+              borderColor={colors.TextInputBorderColor}
+              borderWidth={1}
+              onChangeText={onChangeNamesSIA}
+              value={siaNames}
+              error={false}
+            />
+            </View>
 
 
             {/* Category: Manager Details */}
@@ -414,9 +665,9 @@ const SurveyForm = () => {
                   paddingBottom={10}
                   borderColor={colors.TextInputBorderColor}
                   borderWidth={1}
-                  onChangeText={onChangeText}
-                  value={value}
-                  error={errorName}
+                  onChangeText={onChangeName}
+                  value={ManagerName}
+                  error={false}
                 />
 
 
@@ -443,9 +694,9 @@ const SurveyForm = () => {
                   paddingBottom={10}
                   borderColor={colors.TextInputBorderColor}
                   borderWidth={1}
-                  onChangeText={onChangeText}
-                  value={value}
-                  error={errorName}
+                  onChangeText={onChangePosition}
+                  value={position}
+                  error={false}
                 />
 
 
@@ -463,8 +714,8 @@ const SurveyForm = () => {
 
                 <RadioGroup
                   options={radioOptions1}
-                  selectedValue={selectedValue}
-                  onValueChange={handlePress}
+                  selectedValue={selectedAware}
+                  onValueChange={handleAware}
                 />
 
               </View>
@@ -624,7 +875,7 @@ const SurveyForm = () => {
                 />
 
                 <FlatList
-                  data={selectedImages.length > 0 ? [...selectedImages, "ADD_BUTTON"] : []}
+                  data={selectedImages.length > 0 && selectedImages.length < 3 ? [...selectedImages, "ADD_BUTTON"] : selectedImages} 
                   renderItem={({ item }) =>
                     item === 'ADD_BUTTON' ? renderAddImageButton() : renderAddItem({ item })
                   }
@@ -665,7 +916,7 @@ const SurveyForm = () => {
                 <RadioGroup
                   options={radioOptions3}
                   selectedValue={selectedIssues}
-                  onValueChange={setSelectedIssues}
+                  onValueChange={handleIssues}
                 />
               </View>
               {selectedIssues === 'Yes' && (
@@ -674,9 +925,9 @@ const SurveyForm = () => {
                   style={styles.textInput}
                   multiline
                   numberOfLines={4}
-                  value={additionalDetails}
-                  onChangeText={setAdditionalDetails}
-                  placeholder="Enter additional details"
+                  value={attention}
+                  onChangeText={setAttention}
+                  placeholder="Enter issues"
                 />
 
               )}
@@ -713,16 +964,16 @@ const SurveyForm = () => {
                 marginBottom={10}
               />
               {signature ?
-              <TouchableOpacity onPress={addSignature}>
-               <Image
-               source={{ uri: signature }} 
-               style={styles.signatureImage}
-               resizeMode="contain"
-               
-             />
-            </TouchableOpacity>
-             
-              :
+                <TouchableOpacity onPress={addSignature}>
+                  <Image
+                    source={{ uri: signature }}
+                    style={styles.signatureImage}
+                    resizeMode="contain"
+
+                  />
+                </TouchableOpacity>
+
+                :
 
                 <TouchableOpacity onPress={addSignature} style={{ flex: 1 }}>
 
@@ -744,7 +995,7 @@ const SurveyForm = () => {
                     color={colors.black}
                   />
                 </TouchableOpacity>
-}
+              }
             </View>
 
 
@@ -754,9 +1005,9 @@ const SurveyForm = () => {
 
           </View>
 
-          <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitButtonText}>Submit Form</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.submitButton} onPress={submitForm}>
+            <Text style={styles.submitButtonText}>Submit Form</Text>
+          </TouchableOpacity>
 
 
 
@@ -769,6 +1020,14 @@ const SurveyForm = () => {
         onClose={togglePicker}
         done={done}
         text={"Number of Aisles"}
+        items={items}
+      />
+      <PickerComponent
+        visible={showPicker1}
+        selectedValue={selectedPickerValue1}
+        onClose={togglePicker1}
+        done={done1}
+        text={"Number of Guards"}
         items={items}
       />
       <PickerComponent
@@ -817,7 +1076,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.surveyFormBackground,
-   paddingHorizontal: moderateScale(20),
+    paddingHorizontal: moderateScale(20),
   },
   scrollView: {
     flexGrow: 1, // Ensure the content is scrollable

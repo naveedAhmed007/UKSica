@@ -32,6 +32,7 @@ interface props {
     pointerEvents?:PointerEvents,
     editable?:boolean,
     color?:string,
+    ref?:any,
 
 
 
@@ -58,16 +59,19 @@ const CustomTextInput: FC<props> = ({ placeholder,
   pointerEvents="auto",
   error,
   editable=true,
-  color=colors.black
+  color=colors.black,
+  ref=""
   
   
 
 
 }) => {
     return (
-        <TextInput style={{
+        <TextInput
+        
+        style={{
     borderRadius,
-    borderColor,
+    borderColor:error==true?colors.errorColorCode:borderColor,
     borderWidth,
     backgroundColor,
     fontSize: moderateScale(fontSize),
