@@ -2,7 +2,7 @@ import {
     Text, View, StyleSheet,
     TextInput, TextStyle, ViewStyle, TextInputProps,
     DimensionValue,TouchableOpacity,FlatList,Image,
-    Modal
+    Modal,Dimensions,
 } from "react-native"
 import { moderateScale } from "react-native-size-matters";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -22,6 +22,6 @@ export {
     TouchableOpacity, FlatList, KeyboardAwareScrollView,
     headings, colors, fonts, placeholders,
     uuid, Image, Icon, AntDesign, launchCamera,
-    launchImageLibrary,Modal,SignatureScreen
+    launchImageLibrary,Modal,SignatureScreen,Dimensions
 };
 export type { ViewStyle, TextInputProps, DimensionValue, TextStyle,ImagePickerResponse };

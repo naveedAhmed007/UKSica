@@ -1,6 +1,8 @@
 import React, { useState, useRef, FC } from 'react';
-import { Modal, SignatureScreen, Text, View, StyleSheet, moderateScale, TouchableOpacity, colors, Icon, fonts } from '../utils/imports';
-import { Dimensions } from 'react-native';
+import {
+  Modal, SignatureScreen, Text, View, StyleSheet, moderateScale,
+  TouchableOpacity, colors, Icon, fonts, Dimensions
+} from '../utils/imports';
 
 interface SignatureModalProps {
   isVisible: boolean;
@@ -17,18 +19,17 @@ const SignatureModal: FC<SignatureModalProps> = ({
   const ref = useRef<any>();
 
   const handleOK = (signature: string) => {
-    console.log('Signatur111111111111:', signature);
     setSignature(signature);
   };
 
   const handleEmpty = () => {
-    console.log("Signature=======", signature);
+
+  };
+  const handleClear = () => {
+    ref.current?.clearSignature();
+    setSignature(signature)
   };
 
-  const handleClear = () => {
-    console.log('Signature cleared');
-    setSignature(null);
-  };
 
   const handleEnd = () => {
     ref.current.readSignature();
@@ -39,36 +40,35 @@ const SignatureModal: FC<SignatureModalProps> = ({
 
   const webStyle = `
   .m-signature-pad--footer {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row-reverse;
-    padding: 0 10px;
-  }
-
-  .m-signature-pad--footer .button.clear {
-    background-color: #eee;
-     color: #f44336; 
-  }
-
-  .m-signature-pad--footer .button {
-    background-color: #000080; /* Confirm button color */
-    margin-right: 10px;
-    margin-top: 15px;
-    width: 48%; /* Each button takes 48% width */
-    height: 50px;
-    font-size: 20px;
-    font-weight: 500;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-     .m-signature-pad--footer .button:not(.clear) {
     display: none;
+    margin: 0;
+    padding :0;
   }
-    
+
+
+
+  
+  .m-signature-pad {
+      width: 100%; 
+      height: 100vh; 
+      border: 0px solid #ddd;
+      align-self: center;
+      margin: 0 auto; 
+      box-shadow: none; 
+       background-color: "#00ffee";
+    }
+    .m-signature-pad--body {
+  height: 100%; 
+  background-color: #C0C0C0;
+}
+ 
+
+   
 `;
 
+  // .m-signature-pad--footer .button:not(.clear) {
+  //   display: none;
+  // }
 
   return (
     <Modal
@@ -78,32 +78,49 @@ const SignatureModal: FC<SignatureModalProps> = ({
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          {/* Header Section */}
           <View style={styles.header}>
             <Text style={styles.headerText}>Your Signature</Text>
             <TouchableOpacity style={styles.closeModalButton} onPress={onClose}>
               <Icon name="times" size={20} color={colors.white} />
             </TouchableOpacity>
           </View>
-          <SignatureScreen
-            ref={ref}
-            onEnd={handleEnd}
-            onOK={handleOK}
-            onEmpty={handleEmpty}
-            onClear={handleClear}
-            onGetData={handleData}
-            autoClear={false}
-            descriptionText=""
-            style={styles.signatureScreen}
-            webStyle={webStyle}
-          />
+          <View style={styles.signatureView}>
+            <SignatureScreen
+              ref={ref}
+              onEnd={handleEnd}
+              onOK={handleOK}
+              onEmpty={handleEmpty}
+              onGetData={handleData}
+              autoClear={false}
+              descriptionText=""
+              style={styles.signatureScreen}
+              webStyle={webStyle}
+            />
+          </View>
 
+          <View style={styles.buttons}>
           <TouchableOpacity
             style={styles.submitButton}
-            onPress={onSaveSignature.bind(null,signature)}
-          >
-            <Text style={styles.buttonText}>Confirm</Text>
+            onPress={onSaveSignature.bind(null, signature)}
+            >
+            <Text style={styles.submitButtonText}>Confirm</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.submitButton,{marginLeft:moderateScale(20),
+              backgroundColor:"#ddd",
+              
+            }]}
+            onPress={handleClear}
+          >
+            <Text style={[styles.submitButtonText,{color:"red"}]}>Clear</Text>
+          </TouchableOpacity>
+          
+          </View>
+
+
+
+
+
 
 
         </View>
@@ -121,64 +138,20 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: 'white',
-    paddingHorizontal: moderateScale(20),
+    marginHorizontal: moderateScale(20),
     borderRadius: moderateScale(15),
     alignItems: 'center',
-    height: moderateScale(460),
-    elevation: 10, // Adds shadow for Android
+    elevation: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
-  modalTitle: {
-    fontSize: moderateScale(18),
-    fontWeight: '600',
-    marginBottom: moderateScale(15),
-    color: '#333',
-  },
-  signatureScreen: {
-    width: moderateScale(280),
-    height: moderateScale(150),
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: moderateScale(10),
-    marginBottom: moderateScale(15),
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: moderateScale(10),
-  },
-  clearButton: {
-    backgroundColor: '#f44336',
-    padding: moderateScale(10),
-    borderRadius: moderateScale(10),
-    flex: 1,
-    marginRight: moderateScale(10),
-    alignItems: 'center',
-  },
-  saveButton: {
-    backgroundColor: '#4CAF50',
-    padding: moderateScale(10),
-    borderRadius: moderateScale(10),
-    flex: 1,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: moderateScale(14),
-    fontWeight: '600',
-  },
-
-
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginHorizontal: moderateScale(-20),
     marginBottom: moderateScale(10),
     backgroundColor: colors.headerColor,  // Set a background color for the header
     paddingHorizontal: moderateScale(10),
@@ -200,19 +173,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  signatureScreen: {
+    width: moderateScale(280),
+    height: moderateScale(150),
+    borderWidth: moderateScale(1),
+    borderColor: '#ddd',
+    borderRadius: moderateScale(10),
+    marginBottom: moderateScale(15),
+  },
   submitButton: {
     backgroundColor: '#000080',
-    paddingHorizontal: moderateScale(30),
-    paddingVertical: moderateScale(14.5),
+    paddingVertical: moderateScale(14),
     borderRadius: moderateScale(10),
     marginTop: moderateScale(10),
     alignItems: 'center',
-    position:"absolute",
-    bottom:moderateScale(42),
-    left:moderateScale(40),
+   width:moderateScale(100),
+    marginBottom:moderateScale(10)
+
 
   },
+  submitButtonText: {
+    color: '#fff',
+    fontSize: moderateScale(18),
+    fontWeight: 'bold',
+  },
+  signatureView: {
+    height: moderateScale(300)
+  },
+  buttons: {
+    flexDirection: "row", 
+    alignItems: 'center',
+    justifyContent: "center",
+    marginBottom:moderateScale(10)
+    
+    
 
+  }
+
+
+  
 });
 
 export default SignatureModal;
