@@ -19,6 +19,8 @@ import SignatureModal from "../components/SignBoard";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { postData } from "../apis/ApiServices";
 import { endpoints } from "../apis/endPoints";
+import { showToast } from "../components/ShowToast";
+import Loader from "../components/Loader";
 
 const SurveyForm = () => {
   const isFocused: any = useIsFocused();
@@ -31,6 +33,7 @@ const SurveyForm = () => {
   const [position, setPosition] = useState<string>("");
   const [siaNames, setSIANames] = useState<string>("");
   const [attention, setAttention] = useState<string>("");
+  const [showLoader, setShowLoader] = useState<boolean>(false);
 
 
   const [errorStoreName, setErrorStoreName] = useState<boolean>(false);
@@ -95,12 +98,12 @@ const SurveyForm = () => {
     }
   };
 
-  
+
 
   const handleSaveSignature = async (signature: string) => {
 
-  
-  
+
+
     setSignature({ uri: signature, name: `${moment().valueOf()}.png`, type: "image/png" });
 
 
@@ -120,191 +123,210 @@ const SurveyForm = () => {
 
 
   const submitForm = useCallback(async () => {
-    if (storeName.trim().length <= 0) {
-      setErrorStoreName(true)
-      setErrorAddress(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(false)
+    try {
+      if (storeName.trim().length <= 0) {
+        setErrorStoreName(true)
+        setErrorAddress(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(false)
 
 
-      const nodeHandle = findNodeHandle(storeNameRef.current);
-      _scrollToInput(nodeHandle);
+        const nodeHandle = findNodeHandle(storeNameRef.current);
+        _scrollToInput(nodeHandle);
+      }
+      else if (address.trim().length <= 0) {
+        setErrorAddress(true)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(false)
+
+
+        const nodeHandle = findNodeHandle(AddressRef.current);
+        _scrollToInput(nodeHandle);
+      }
+      else if (selectedPickerValue1.trim().length <= 0) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(true)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(false)
+
+
+
+        const nodeHandle = findNodeHandle(NoOfGuardsRef.current);
+        _scrollToInput(nodeHandle);
+
+      }
+      else if (ManagerName.trim().length <= 0) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(true)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(false)
+
+
+        const nodeHandle = findNodeHandle(managerNameRef.current);
+        _scrollToInput(nodeHandle);
+
+      }
+      else if (position.trim().length <= 0) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(true)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(false)
+
+
+        const nodeHandle = findNodeHandle(positionRef.current);
+        _scrollToInput(nodeHandle);
+
+      }
+      else if (selectedGuardBehavior.trim().length <= 0) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(true)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(false)
+
+
+        const nodeHandle = findNodeHandle(guardBehaviorRef.current);
+        _scrollToInput(nodeHandle);
+
+      }
+      else if (selectedResponse.trim().length <= 0) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(true)
+        setErrorSecurity(false)
+        setErrorSign(false)
+
+        const nodeHandle = findNodeHandle(responseTimeRef.current);
+        _scrollToInput(nodeHandle);
+
+      }
+      else if (selectedRating.trim().length <= 0) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(true)
+        setErrorSign(false)
+
+        const nodeHandle = findNodeHandle(securityRef.current);
+        _scrollToInput(nodeHandle);
+
+      }
+      else if (!signature) {
+        setErrorAddress(false)
+        setErrorStoreName(false)
+        setErrorSecurityGuard(false)
+        setErrorManagerName(false)
+        setErrorPosition(false)
+        setErrorGuardBehavior(false)
+        setErrorResponseTime(false)
+        setErrorSecurity(false)
+        setErrorSign(true)
+      }
+      else {
+        setShowLoader(true)
+
+        const mappedImages: any = await mapImagesToFields(selectedImages);
+        const formDataFields = {
+          StoreName: storeName,
+          Address: address,
+          Size_Of_Store: selectedPickerValue,
+          Number_of_Security_Guards_Onsite: selectedPickerValue1,
+          SIA_Badge_Visible_on_first_guard: selectedValue.value,
+          Company_Brand_Logo_Visible_on_Guard: selectedLogo.value,
+          Names_and_SIA_number_of_Guards: siaNames,
+          Manager_Person_Spoken_To: ManagerName,
+          Position: position,
+          Was_the_Manager_Person_aware_of_Security_Proc: selectedAware.value,
+          Is_GDPR_Controller_Information_Available_Onsite: selectedGDPR.value,
+          Is_the_CCTV_Warning_Sign_Displayed: selectedCCTV.value,
+          Is_there_visible_information_on_data_collection: selectedInfo.value,
+          Security_Guards_Behavior_and_Professionalism: selectedGuardBehavior.substring(0, 1),
+          Response_Time_of_Guards_to_Issues: selectedResponse.substring(0, 1),
+          Additional_Observations: additionalDetails,
+          Are_There_Any_Issues: selectedIssues.value,
+          Issues_Details: attention,
+          Overall_Security_Rating: selectedRating.substring(0, 1),
+          Auditor_Name: "Bilal",
+          Relevant_Photo_File1: mappedImages.Relevant_Photo_File1,
+          Relevant_Photo_File2: mappedImages.Relevant_Photo_File2,
+          Relevant_Photo_File3: mappedImages.Relevant_Photo_File3,
+          Auditor_Signature_File: signature,
+
+
+
+        };
+
+
+
+
+
+        const result: any = await postData(endpoints.AddAuditDetails, formDataFields);
+        console.log("result============", result)
+
+        if (result.success==true) {
+          navigation.navigate("UserTypeScreens")
+
+
+        }
+        else {
+          showToast({
+            text1: headings.errorMessage,
+            type: "error"
+          })
+          
+        }
+      }
+
     }
-    else if (address.trim().length <= 0) {
-      setErrorAddress(true)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(false)
-
-
-      const nodeHandle = findNodeHandle(AddressRef.current);
-      _scrollToInput(nodeHandle);
-    }
-    else if (selectedPickerValue1.trim().length <= 0) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(true)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(false)
-
-
-
-      const nodeHandle = findNodeHandle(NoOfGuardsRef.current);
-      _scrollToInput(nodeHandle);
+    catch (error) {
+      showToast({
+        text1: headings.errorMessage,
+        type: "error"
+      })
 
     }
-    else if (ManagerName.trim().length <= 0) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(true)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(false)
-
-
-      const nodeHandle = findNodeHandle(managerNameRef.current);
-      _scrollToInput(nodeHandle);
-
+    finally{
+      setShowLoader(false)
     }
-    else if (position.trim().length <= 0) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(true)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(false)
 
-
-      const nodeHandle = findNodeHandle(positionRef.current);
-      _scrollToInput(nodeHandle);
-
-    }
-    else if (selectedGuardBehavior.trim().length <= 0) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(true)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(false)
-
-
-      const nodeHandle = findNodeHandle(guardBehaviorRef.current);
-      _scrollToInput(nodeHandle);
-
-    }
-    else if (selectedResponse.trim().length <= 0) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(true)
-      setErrorSecurity(false)
-      setErrorSign(false)
-
-      const nodeHandle = findNodeHandle(responseTimeRef.current);
-      _scrollToInput(nodeHandle);
-
-    }
-    else if (selectedRating.trim().length <= 0) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(true)
-      setErrorSign(false)
-
-      const nodeHandle = findNodeHandle(securityRef.current);
-      _scrollToInput(nodeHandle);
-
-    }
-    else if (!signature) {
-      setErrorAddress(false)
-      setErrorStoreName(false)
-      setErrorSecurityGuard(false)
-      setErrorManagerName(false)
-      setErrorPosition(false)
-      setErrorGuardBehavior(false)
-      setErrorResponseTime(false)
-      setErrorSecurity(false)
-      setErrorSign(true)
-    }
-    else {
-
-      const mappedImages: any = await mapImagesToFields(selectedImages);
-      const formDataFields = {
-        StoreName: storeName,
-        Address: address,
-        Size_Of_Store: selectedPickerValue,
-        Number_of_Security_Guards_Onsite: selectedPickerValue1,
-        SIA_Badge_Visible_on_first_guard: selectedValue.value,
-        Company_Brand_Logo_Visible_on_Guard: selectedLogo.value,
-        Names_and_SIA_number_of_Guards: siaNames,
-        Manager_Person_Spoken_To: ManagerName,
-        Position: position,
-        Was_the_Manager_Person_aware_of_Security_Proc: selectedAware.value,
-        Is_GDPR_Controller_Information_Available_Onsite: selectedGDPR.value,
-        Is_the_CCTV_Warning_Sign_Displayed: selectedCCTV.value,
-        Is_there_visible_information_on_data_collection: selectedInfo.value,
-        Security_Guards_Behavior_and_Professionalism: selectedGuardBehavior.substring(0, 1),
-        Response_Time_of_Guards_to_Issues: selectedResponse.substring(0, 1),
-        Additional_Observations: additionalDetails,
-        Are_There_Any_Issues: selectedIssues.value,
-        Issues_Details: attention,
-        Overall_Security_Rating: selectedRating.substring(0, 1),
-        Auditor_Name: "Bilal",
-        Relevant_Photo_File1: mappedImages.Relevant_Photo_File1,
-        Relevant_Photo_File2: mappedImages.Relevant_Photo_File2,
-        Relevant_Photo_File3: mappedImages.Relevant_Photo_File3,
-        Auditor_Signature_File: signature,
-
-
-
-      };
-      
-
-      
-
-
-      const result: any = await postData(endpoints.AddAuditDetails, formDataFields);
-      console.log("result============", result)
-      
-       if(result){
-        navigation.navigate("UserTypeScreens")
-
-
-       }
-       else{
-        console.log("ssssssssssss")
-       }
-    }
 
 
 
@@ -460,11 +482,11 @@ const SurveyForm = () => {
 
 
 
-  const behaviourOptions = ["Excellent", "Satisfactory", "Needs Improvement"];
+  const behaviourOptions = ["Select a value", "Excellent", "Satisfactory", "Needs Improvement"];
 
-  const responseOptions = ["Immediate", "Delayed", "Not Applicable"];
+  const responseOptions = ["Select a value", "Immediate", "Delayed", "Not Applicable"];
 
-  const ratingOptions = ["Excellent", "Good", "Satisfactory", "Needs Improvement"];
+  const ratingOptions = ["Select a value", "Excellent", "Good", "Satisfactory", "Needs Improvement"];
 
 
 
@@ -543,7 +565,7 @@ const SurveyForm = () => {
 
 
 
-  const items: string[] = Array.from({ length: 100 }, (_, index) => (index + 1).toString());
+  const items: string[] = ["Select a value", ...Array.from({ length: 100 }, (_, index) => (index + 1).toString())];
 
   const togglePicker = () => {
     setShowPicker(!showPicker);
@@ -1256,10 +1278,11 @@ const SurveyForm = () => {
             <Text style={styles.submitButtonText}>Submit Form</Text>
           </TouchableOpacity>
 
-
-
+          
         </View>
+      
       </KeyboardAwareScrollView>
+      {showLoader && <Loader />}
 
       <PickerComponent
         visible={showPicker}

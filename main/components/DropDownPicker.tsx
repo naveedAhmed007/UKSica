@@ -7,10 +7,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons'; // Importing Materia
 interface PickerComponentProps {
   visible: boolean;
   onClose: () => void;
-  done: (value:string) => void;
+  done: (value: string) => void;
   selectedValue: string;
   items: string[];
-  text:string,
+  text: string,
 }
 
 const PickerComponent: React.FC<PickerComponentProps> = ({
@@ -22,11 +22,11 @@ const PickerComponent: React.FC<PickerComponentProps> = ({
   text
 }) => {
   const slideAnim = React.useRef(new Animated.Value(0)).current;
-  const [value,setValue]=useState<string>(selectedValue);
+  const [value, setValue] = useState<string>(selectedValue);
 
   useEffect(() => {
-    
-      setValue(selectedValue);
+
+    setValue(selectedValue);
   }, [visible]);
 
 
@@ -49,11 +49,15 @@ const PickerComponent: React.FC<PickerComponentProps> = ({
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
-        <Animated.View style={[styles.pickerContainer, { transform: [{ translateY: slideAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [300, 0],
-          }) }] }]}>
-          
+        <Animated.View style={[styles.pickerContainer, {
+          transform: [{
+            translateY: slideAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [300, 0],
+            })
+          }]
+        }]}>
+
           {/* Heading Text with Close Icon */}
           <View style={styles.headingContainer}>
             <Text style={styles.headingText}>{text}</Text>
@@ -61,7 +65,7 @@ const PickerComponent: React.FC<PickerComponentProps> = ({
               <Icon name="close" size={25} color="white" />
             </TouchableOpacity>
           </View>
-          
+
           {/* Picker Component */}
           <Picker
             style={styles.picker}
@@ -70,10 +74,22 @@ const PickerComponent: React.FC<PickerComponentProps> = ({
             onValueChange={setValue}
           />
 
-          {/* Done Button */}
-          <TouchableOpacity style={styles.doneButton} onPress={done.bind(null,value)}>
+
+
+          <TouchableOpacity style={[styles.doneButton, {
+            backgroundColor: value == "" || value == "Select a value" ? 'rgba(0, 0, 128, 0.5)'
+
+              : 'rgba(0, 0, 128, 1)'
+
+            ,
+          }]} onPress={done.bind(null, value)}
+            disabled={value == "" || value == "Select a value" ? true : false}
+            activeOpacity={1}
+
+          >
             <Text style={styles.doneButtonText}>Done</Text>
           </TouchableOpacity>
+
         </Animated.View>
       </View>
     </Modal>
@@ -105,7 +121,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: moderateScale(15),
     alignItems: 'center',
-    paddingVertical:moderateScale(5),
+    paddingVertical: moderateScale(5),
   },
   headingText: {
     fontSize: moderateScale(20),
@@ -118,9 +134,9 @@ const styles = StyleSheet.create({
     borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
     width: Dimensions.get('window').width * 0.07,
     height: Dimensions.get('window').width * 0.07,
-    backgroundColor:'#000080',
-    alignItems:"center",
-    justifyContent:'center',
+    backgroundColor: '#000080',
+    alignItems: "center",
+    justifyContent: 'center',
   },
   doneButton: {
     backgroundColor: '#000080', // Dark blue button background

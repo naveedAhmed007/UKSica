@@ -12,8 +12,8 @@ export const Loader = () => {
         autoPlay 
         loop 
         style={{
-          height:moderateScale(150),
-          width:moderateScale(150)
+          height:moderateScale(300),
+          width:moderateScale(300)
         }}  
       />
 
