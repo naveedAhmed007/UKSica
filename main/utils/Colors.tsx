@@ -8,4 +8,5 @@ export const colors={
     gray:'#333',
     TextInputBorderColor:"#ccc",
     errorColorCode:"#B22222",
+    loaderBackDropColor:"rgba(0,0,0,0.5)",
 }

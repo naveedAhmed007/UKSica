@@ -8,8 +8,8 @@ interface RadioOption {
 
 interface RadioGroupProps {
   options: RadioOption[];
-  selectedValue: string;
-  onValueChange: (value: string) => void;
+  selectedValue:any;
+  onValueChange: (value: any) => void;
 }
 
 const RadioGroup: React.FC<RadioGroupProps> = ({ options, selectedValue, onValueChange }) => {
@@ -19,10 +19,10 @@ const RadioGroup: React.FC<RadioGroupProps> = ({ options, selectedValue, onValue
         <TouchableOpacity
           key={option.value}
           style={[styles.radioButton,{marginRight:options.length>2?moderateScale(0):moderateScale(50)}]}
-          onPress={() => onValueChange(option.value)}
+          onPress={() => onValueChange(option)}
         >
           <View style={styles.outerCircle}>
-            {selectedValue === option.value && <View style={styles.innerCircle} />}
+            {selectedValue.value === option.value && <View style={styles.innerCircle} />}
           </View>
           <Text style={styles.label}>{option.label}</Text>
         </TouchableOpacity>

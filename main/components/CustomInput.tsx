@@ -6,7 +6,7 @@ type FontWeight = "normal" | "bold" | "100" | "200" | "300" | "400" | "500" | "6
 type PointerEvents = "auto" | "box-none" | "none" | "box-only";
 interface props {
     placeholder: string,
-    onChangeText: (text:string) => void,
+    onChangeText: (text: string) => void,
     value: string,
     fontSize?: number;
     fontWeight?: FontWeight;
@@ -28,11 +28,13 @@ interface props {
     borderColor?: string;
     borderWidth?: number;
     backgroundColor?: string;
-    error:boolean,
-    pointerEvents?:PointerEvents,
-    editable?:boolean,
-    color?:string,
-    ref?:any,
+    error: boolean,
+    pointerEvents?: PointerEvents,
+    editable?: boolean,
+    color?: string,
+    placeholderTextColor?: string,
+    height?: number,
+    secureTextEntry?:boolean,
 
 
 
@@ -43,59 +45,67 @@ const CustomTextInput: FC<props> = ({ placeholder,
     onChangeText,
     value,
     fontSize = 16,
-  fontWeight = 'normal',
-  marginTop = 0,
-  marginBottom = 0,
-  marginLeft = 0,
-  marginRight = 0,
-  paddingTop = 0,
-  paddingBottom = 0,
-  paddingLeft = 0,
-  paddingRight = 0,
-  borderRadius = 5,
-  borderColor = '#ccc',
-  borderWidth = 1,
-  backgroundColor = '#fff',
-  pointerEvents="auto",
-  error,
-  editable=true,
-  color=colors.black,
-  ref=""
-  
-  
+    fontWeight = 'normal',
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
+    paddingTop = 0,
+    paddingBottom = 0,
+    paddingLeft = 0,
+    paddingRight = 0,
+    borderRadius = 5,
+    borderColor = '#ccc',
+    borderWidth = 1,
+    backgroundColor = '#fff',
+    pointerEvents = "auto",
+    error,
+    editable = true,
+    color = colors.black,
+    placeholderTextColor = "#D3D3D3",
+    height = 50,
+    secureTextEntry=false,
+
+
 
 
 }) => {
     return (
         <TextInput
-        
-        style={{
-    borderRadius,
-    borderColor:error==true?colors.errorColorCode:borderColor,
-    borderWidth,
-    backgroundColor,
-    fontSize: moderateScale(fontSize),
-    fontWeight,
-    marginTop: moderateScale(marginTop),
-    marginBottom: moderateScale(marginBottom),
-    marginLeft: moderateScale(marginLeft),
-    marginRight: moderateScale(marginRight),
-    paddingLeft: moderateScale(paddingLeft),
-    paddingRight: moderateScale(paddingRight),
-    paddingTop: moderateScale(paddingTop),
-    paddingBottom: moderateScale(paddingBottom),
-    pointerEvents:pointerEvents,
-    color:color,
-    
-    
-    
 
-    
-        }}        
+            style={{
+                borderRadius,
+                borderColor: error == true ? colors.errorColorCode : borderColor,
+                borderWidth,
+                backgroundColor,
+                fontSize: moderateScale(fontSize),
+                fontWeight,
+                marginTop: moderateScale(marginTop),
+                marginBottom: moderateScale(marginBottom),
+                marginLeft: moderateScale(marginLeft),
+                marginRight: moderateScale(marginRight),
+                paddingLeft: moderateScale(paddingLeft),
+                paddingRight: moderateScale(paddingRight),
+                paddingTop: moderateScale(paddingTop),
+                paddingBottom: moderateScale(paddingBottom),
+                pointerEvents: pointerEvents,
+                color: color,
+                height:moderateScale(height),
+                flex:1,
+
+
+
+
+
+
+            }}
             placeholder={placeholder}
             value={value}
             onChangeText={onChangeText}
             editable={editable}
+            placeholderTextColor={placeholderTextColor}
+            secureTextEntry={secureTextEntry}
+
         />
     );
 };

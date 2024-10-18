@@ -7,8 +7,9 @@ interface props {
     onPress: () => void,
     value: string,
     text:string,
+    error:boolean,
 }
-const CustomNumberPicker: FC<props> = ({ onPress, value,text }) => {
+const CustomNumberPicker: FC<props> = ({ onPress, value,text,error }) => {
     return (
         <TouchableOpacity onPress={onPress} activeOpacity={1}>
 
@@ -16,17 +17,18 @@ const CustomNumberPicker: FC<props> = ({ onPress, value,text }) => {
                 placeholder={text}
                 pointerEvents="none"
                 value={value} onChangeText={() => { }}
-                error={false}
+                error={error}
                 backgroundColor={colors.white}
                 borderRadius={10}
                 paddingLeft={10}
                 paddingRight={10}
                 paddingTop={10}
                 paddingBottom={10}
-                borderColor={colors.TextInputBorderColor}
+                borderColor={error==true?colors.errorColorCode:colors.TextInputBorderColor}
                 borderWidth={1}
                 editable={false}
                 color={colors.black}
+
             />
 
         </TouchableOpacity>

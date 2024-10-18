@@ -12,8 +12,9 @@ import {
   placeholders, StyleSheet, TextInput, TouchableOpacity,
   uuid, View
 } from "../utils/imports";
+import moment from 'moment';
 import CustomTextInput from "../components/CustomInput";
-import { Alert, Dimensions, Text } from "react-native";
+import { Alert, Dimensions, findNodeHandle, Text } from "react-native";
 import SignatureModal from "../components/SignBoard";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { postData } from "../apis/ApiServices";
@@ -22,26 +23,31 @@ import { endpoints } from "../apis/endPoints";
 const SurveyForm = () => {
   const isFocused: any = useIsFocused();
 
-  const [value, setValue] = useState<string>("");
 
-  const [errorName, setErrorName] = useState<string>("");
 
   const [storeName, setStoreName] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
   const [ManagerName, setManagerName] = useState<string>("");
   const [position, setPosition] = useState<string>("");
-  
-  const [errorStoreName, setErroStoreName] = useState<boolean>(false);
- 
-  const [address, setAddress] = useState<string>("");
-  const [errorAddress, setErrorAddress] = useState<boolean>(false);
- 
-  const [errorNameText, setErrorNameText] = useState<string>("");
   const [siaNames, setSIANames] = useState<string>("");
   const [attention, setAttention] = useState<string>("");
-  const navigation:any=useNavigation();
- 
-  const scrollViewRef:any = useRef(null);
-  const storeNameRef:any = useRef(null); 
+
+
+  const [errorStoreName, setErrorStoreName] = useState<boolean>(false);
+  const [errorAddress, setErrorAddress] = useState<boolean>(false);
+  const [errorSecurityGuard, setErrorSecurityGuard] = useState<boolean>(false);
+  const [errorManagerName, setErrorManagerName] = useState<boolean>(false);
+  const [errorPosition, setErrorPosition] = useState<boolean>(false);
+  const [errorGuardBehavior, setErrorGuardBehavior] = useState<boolean>(false);
+  const [errorResponseTime, setErrorResponseTime] = useState<boolean>(false);
+  const [errorSecurity, setErrorSecurity] = useState<boolean>(false);
+  const [errorSign, setErrorSign] = useState<boolean>(false);
+
+
+
+
+  const navigation: any = useNavigation();
+
 
   const [showPicker, setShowPicker] = useState(false);
   const [showPicker1, setShowPicker1] = useState(false);
@@ -53,106 +59,243 @@ const SurveyForm = () => {
   const [guardBehavior, setGuardBehavior] = useState<boolean>(false);
   const [showResponseOptions, setShowResponseOptions] = useState<boolean>(false);
   const [showRatingOptions, setShowRatingOptions] = useState<boolean>(false);
-  const [selectedValue, setSelectedValue] = useState<string>("Yes");
-  const [selectedAware, setSelectedAware] = useState<string>("Yes");
-  const [selectedLogo, setSelectedLogo] = useState<string>('Yes');
-  const [selectedGDPR, setSelectedGDPR] = useState<string>('Yes');
-  const [selectedCCTV, setSelectedCCTV] = useState<string>('Yes');
-  const [selectedIssues, setSelectedIssues] = useState<string>('No');
-  const [selectedInfo, setSelectedInfo] = useState<string>('Yes');
+  const [selectedValue, setSelectedValue] = useState<any>({ label: "Yes", value: "Y" });
+  const [selectedAware, setSelectedAware] = useState<any>({ label: "Yes", value: "Y" });
+  const [selectedLogo, setSelectedLogo] = useState<any>({ label: "Yes", value: "Y" });
+  const [selectedGDPR, setSelectedGDPR] = useState<any>({ label: "Yes", value: "Y" });
+  const [selectedCCTV, setSelectedCCTV] = useState<any>({ label: "Yes", value: "Y" });
+  const [selectedIssues, setSelectedIssues] = useState<any>({ label: "No", value: "N" });
+  const [selectedInfo, setSelectedInfo] = useState<any>({ label: "Yes", value: "Y" });
   const [additionalDetails, setAdditionalDetails] = useState<string>('');
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState<any>([]);
   const [modalSignVisible, setModalSignVisible] = useState(false);
-  const [signature, setSignature] = useState<string | null>(null);
+  const [signature, setSignature] = useState<any>(null);
 
-  const handleSaveSignature = (signature: string) => {
-    setSignature(signature);
+  const scrollRef = useRef(null);
+  const storeNameRef = useRef(null);
+  const AddressRef = useRef(null);
+  const AislesRef = useRef(null);
+  const NoOfGuardsRef = useRef(null);
+  const managerNameRef = useRef(null);
+  const positionRef = useRef(null);
+  const guardBehaviorRef = useRef(null);
+  const responseTimeRef = useRef(null);
+  const securityRef = useRef(null);
+  // const storeNameRef = useRef(null);
+  // const storeNameRef = useRef(null);
+  // const storeNameRef = useRef(null);
+  // const storeNameRef = useRef(null);
+
+
+  const _scrollToInput = (nodeHandle: any) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollToFocusedInput(nodeHandle);
+    }
+  };
+
+  
+
+  const handleSaveSignature = async (signature: string) => {
+
+  
+  
+    setSignature({ uri: signature, name: `${moment().valueOf()}.png`, type: "image/png" });
+
+
     setModalSignVisible(false)
+    setErrorSign(false)
 
 
   };
 
 
 
-  
-  
-  
-   // Function to scroll to a specific view
-   
-
-   
-  const submitForm=useCallback(async()=>{
-    // console.log("storeNmae=======",storeName)
-    // console.log("storeAddress=======",address)
-    // console.log("No of assles=========",selectedPickerValue)
-    // console.log("No of guards=========",selectedPickerValue1)
-    // console.log("sia badg",selectedValue)
-    // console.log("logo",selectedLogo)
-    // console.log("names and sia",siaNames)
-    
-    // console.log("mName=========",ManagerName)
-    // console.log("position=========",position)
-    // console.log("aware=========",selectedAware)
-    
-    // console.log("gdpr=========",selectedGDPR)
-    // console.log("cctv=========",selectedCCTV)
-    // console.log("info=========",selectedInfo)
-    
-    // console.log("behavior=====",selectedGuardBehavior)
-    // console.log("responseTime======",selectedResponse)
-    // console.log("additional=========",additionalDetails)
-    
-    // console.log("issues=========",selectedIssues)
-    // console.log("attention======",attention)
-    // console.log("security=======",selectedRating)
-    
-
- 
 
 
 
-    if(storeName.trim().length<=0 || address.trim().length<=0 || selectedPickerValue1.length<=0){
+  // Function to scroll to a specific view
 
-    Alert.alert("please fill out required fields") 
 
+
+  const submitForm = useCallback(async () => {
+    if (storeName.trim().length <= 0) {
+      setErrorStoreName(true)
+      setErrorAddress(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+
+      const nodeHandle = findNodeHandle(storeNameRef.current);
+      _scrollToInput(nodeHandle);
+    }
+    else if (address.trim().length <= 0) {
+      setErrorAddress(true)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+
+      const nodeHandle = findNodeHandle(AddressRef.current);
+      _scrollToInput(nodeHandle);
+    }
+    else if (selectedPickerValue1.trim().length <= 0) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(true)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+
+
+      const nodeHandle = findNodeHandle(NoOfGuardsRef.current);
+      _scrollToInput(nodeHandle);
 
     }
-    else{
-      const mappedImages:any = mapImagesToFields(selectedImages);
-     
+    else if (ManagerName.trim().length <= 0) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(true)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+
+      const nodeHandle = findNodeHandle(managerNameRef.current);
+      _scrollToInput(nodeHandle);
+
+    }
+    else if (position.trim().length <= 0) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(true)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+
+      const nodeHandle = findNodeHandle(positionRef.current);
+      _scrollToInput(nodeHandle);
+
+    }
+    else if (selectedGuardBehavior.trim().length <= 0) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(true)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+
+      const nodeHandle = findNodeHandle(guardBehaviorRef.current);
+      _scrollToInput(nodeHandle);
+
+    }
+    else if (selectedResponse.trim().length <= 0) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(true)
+      setErrorSecurity(false)
+      setErrorSign(false)
+
+      const nodeHandle = findNodeHandle(responseTimeRef.current);
+      _scrollToInput(nodeHandle);
+
+    }
+    else if (selectedRating.trim().length <= 0) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(true)
+      setErrorSign(false)
+
+      const nodeHandle = findNodeHandle(securityRef.current);
+      _scrollToInput(nodeHandle);
+
+    }
+    else if (!signature) {
+      setErrorAddress(false)
+      setErrorStoreName(false)
+      setErrorSecurityGuard(false)
+      setErrorManagerName(false)
+      setErrorPosition(false)
+      setErrorGuardBehavior(false)
+      setErrorResponseTime(false)
+      setErrorSecurity(false)
+      setErrorSign(true)
+    }
+    else {
+
+      const mappedImages: any = await mapImagesToFields(selectedImages);
       const formDataFields = {
         StoreName: storeName,
         Address: address,
         Size_Of_Store: selectedPickerValue,
         Number_of_Security_Guards_Onsite: selectedPickerValue1,
-        SIA_Badge_Visible_on_first_guard: "Y",
-        Company_Brand_Logo_Visible_on_Guard: "Y",
+        SIA_Badge_Visible_on_first_guard: selectedValue.value,
+        Company_Brand_Logo_Visible_on_Guard: selectedLogo.value,
         Names_and_SIA_number_of_Guards: siaNames,
         Manager_Person_Spoken_To: ManagerName,
         Position: position,
-        Was_the_Manager_Person_aware_of_Security_Proc: "N",
-        Is_GDPR_Controller_Information_Available_Onsite: "C",
-        Is_the_CCTV_Warning_Sign_Displayed: "P",
-        Is_there_visible_information_on_data_collection: "Y",
-        Security_Guards_Behavior_and_Professionalism: "E",
-        Response_Time_of_Guards_to_Issues: "D",
+        Was_the_Manager_Person_aware_of_Security_Proc: selectedAware.value,
+        Is_GDPR_Controller_Information_Available_Onsite: selectedGDPR.value,
+        Is_the_CCTV_Warning_Sign_Displayed: selectedCCTV.value,
+        Is_there_visible_information_on_data_collection: selectedInfo.value,
+        Security_Guards_Behavior_and_Professionalism: selectedGuardBehavior.substring(0, 1),
+        Response_Time_of_Guards_to_Issues: selectedResponse.substring(0, 1),
         Additional_Observations: additionalDetails,
-        Are_There_Any_Issues: "Y",
+        Are_There_Any_Issues: selectedIssues.value,
         Issues_Details: attention,
-        Overall_Security_Rating: "E",
+        Overall_Security_Rating: selectedRating.substring(0, 1),
         Auditor_Name: "Bilal",
-        Relevant_Photo_File1: mappedImages.Relevant_Photo_File2,
-        Relevant_Photo_File2: mappedImages.Relevant_Photo_File3,
-        Relevant_Photo_File3: mappedImages.Relevant_Photo_File2,
-         };
-         
+        Relevant_Photo_File1: mappedImages.Relevant_Photo_File1,
+        Relevant_Photo_File2: mappedImages.Relevant_Photo_File2,
+        Relevant_Photo_File3: mappedImages.Relevant_Photo_File3,
+        Auditor_Signature_File: signature,
 
 
+
+      };
       
+
       
-      const result:any = await postData(endpoints.AddAuditDetails, formDataFields);
+
+
+      const result: any = await postData(endpoints.AddAuditDetails, formDataFields);
+      console.log("result============", result)
+      
        if(result){
         navigation.navigate("UserTypeScreens")
 
@@ -161,36 +304,46 @@ const SurveyForm = () => {
        else{
         console.log("ssssssssssss")
        }
-   
     }
-  
-  },[storeName,address,selectedPickerValue,selectedPickerValue1,selectedLogo,
-    siaNames,selectedValue,ManagerName,position,selectedAware,
-  selectedGDPR,selectedCCTV,selectedInfo,selectedGuardBehavior,selectedResponse,additionalDetails,
-selectedIssues,attention,selectedRating,selectedImages  
-])
-const mapImagesToFields = (selectedImages:any) => {
-  // Define the fields for mapping
-  const fields = [
-    "Relevant_Photo_File1",
-    "Relevant_Photo_File2",
-    "Relevant_Photo_File3",
-  ];
 
-  // Map over the selected images and assign them to fields
-  const mappedImages = fields.reduce((acc, field, index) => {
-    if (selectedImages[index]) {
-      acc[field] = {
-        uri: selectedImages[index].url,
-        name: selectedImages[index].name,
-        type: selectedImages[index].type,
-      };
-    }
-    return acc;
-  }, {});
 
-  return mappedImages;
-};
+
+
+
+
+
+
+
+
+  }, [storeName, address, selectedPickerValue, selectedPickerValue1, selectedLogo,
+    siaNames, selectedValue, ManagerName, position, selectedAware,
+    selectedGDPR, selectedCCTV, selectedInfo, selectedGuardBehavior, selectedResponse, additionalDetails,
+    selectedIssues, attention, selectedRating, selectedImages, signature,
+    errorStoreName, errorAddress, errorSecurityGuard, errorManagerName, errorPosition, errorGuardBehavior, errorResponseTime,
+    errorSecurity, errorSign, signature
+  ])
+  const mapImagesToFields = async (selectedImages: any) => {
+    // Define the fields for mapping
+    const fields = [
+      "Relevant_Photo_File1",
+      "Relevant_Photo_File2",
+      "Relevant_Photo_File3",
+    ];
+
+    // Map over the selected images and assign them to fields
+    const mappedImages = fields.reduce((acc, field, index) => {
+      if (selectedImages[index]) {
+        acc[field] = {
+          uri: selectedImages[index].url,
+          name: selectedImages[index].name,
+          type: selectedImages[index].type,
+        };
+      }
+      return acc;
+    }, {});
+
+    return mappedImages;
+  };
 
 
   const openGallery = () => {
@@ -200,11 +353,11 @@ const mapImagesToFields = (selectedImages:any) => {
 
       if (!response.didCancel && response.assets) {
         setSelectedImages((prevImages: any) => [...prevImages, {
-           url: response?.assets[0]?.uri, 
-           id: uuid.v4(),
-          name:response?.assets[0]?.fileName,
-          type:response?.assets[0]?.type,
-        
+          url: response?.assets[0]?.uri,
+          id: uuid.v4(),
+          name: response?.assets[0]?.fileName,
+          type: response?.assets[0]?.type,
+
         }]);
 
 
@@ -218,12 +371,12 @@ const mapImagesToFields = (selectedImages:any) => {
       if (!response.didCancel && response.assets) {
 
         setSelectedImages((prevImages: any) => [...prevImages, {
-          url: response?.assets[0]?.uri, 
+          url: response?.assets[0]?.uri,
           id: uuid.v4(),
-         name:response?.assets[0]?.fileName,
-         type:response?.assets[0]?.type,
-       
-       }]);
+          name: response?.assets[0]?.fileName,
+          type: response?.assets[0]?.type,
+
+        }]);
 
 
       }
@@ -291,18 +444,18 @@ const mapImagesToFields = (selectedImages:any) => {
 
 
   const radioOptions1 = [
-    { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: 'No' },
-    { label: 'Partially', value: 'Partially' },
+    { label: 'Yes', value: 'Y' },
+    { label: 'No', value: 'N' },
+    { label: 'Partially', value: 'P' },
   ];
   const radioOptions3 = [
-    { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: 'No' },
+    { label: 'Yes', value: 'Y' },
+    { label: 'No', value: 'N' },
   ];
   const radioOptions2 = [
-    { label: 'Yes', value: 'Yes' },
-    { label: 'No', value: 'No' },
-    { label: 'Not Clear', value: 'notClear' },
+    { label: 'Yes', value: 'Y' },
+    { label: 'No', value: 'N' },
+    { label: 'Not Clear', value: 'C' },
   ];
 
 
@@ -316,25 +469,25 @@ const mapImagesToFields = (selectedImages:any) => {
 
 
 
-  const handlePress = useCallback((value: string) => {
+  const handlePress = useCallback((value: any) => {
     setSelectedValue(value)
   }, [selectedValue])
-  const handleAware = useCallback((value: string) => {
+  const handleAware = useCallback((value: any) => {
     setSelectedAware(value)
   }, [selectedAware])
-  const handleLogo = useCallback((value: string) => {
+  const handleLogo = useCallback((value: any) => {
     setSelectedLogo(value)
   }, [selectedLogo])
-  const handleGDPR = useCallback((value: string) => {
+  const handleGDPR = useCallback((value: any) => {
     setSelectedGDPR(value)
   }, [selectedGDPR])
-  const handleCCTV = useCallback((value: string) => {
+  const handleCCTV = useCallback((value: any) => {
     setSelectedCCTV(value)
   }, [selectedCCTV])
-  const handleIssues = useCallback((value: string) => {
+  const handleIssues = useCallback((value: any) => {
     setSelectedIssues(value)
   }, [selectedIssues])
-  const handleInfo = useCallback((value: string) => {
+  const handleInfo = useCallback((value: any) => {
     setSelectedInfo(value)
   }, [selectedInfo])
 
@@ -342,57 +495,52 @@ const mapImagesToFields = (selectedImages:any) => {
 
   const onChangeText = useCallback((newText: string) => {
     if (newText.trim().length <= 0) {
-      setErroStoreName(true)
+      setErrorStoreName(true)
     }
     else {
-      setErroStoreName(false)
+      setErrorStoreName(false)
     }
     setStoreName(newText)
 
   }, [storeName, errorStoreName]);
   const onChangeAddress = useCallback((newText: string) => {
     if (newText.trim().length <= 0) {
-      setErroStoreName(true)
+      setErrorAddress(true)
     }
     else {
-      setErroStoreName(false)
+      setErrorAddress(false)
     }
     setAddress(newText)
 
-  }, [storeName, address]);
+  }, [storeName, errorAddress]);
 
 
   const onChangeName = useCallback((newText: string) => {
     if (newText.trim().length <= 0) {
-      setErroStoreName(true)
+      setErrorManagerName(true)
     }
     else {
-      setErroStoreName(false)
+      setErrorManagerName(false)
     }
     setManagerName(newText)
 
-  }, [ManagerName, errorStoreName]);
+  }, [ManagerName, errorManagerName]);
   const onChangePosition = useCallback((newText: string) => {
     if (newText.trim().length <= 0) {
-      setErroStoreName(true)
+      setErrorPosition(true)
     }
     else {
-      setErroStoreName(false)
+      setErrorPosition(false)
     }
     setPosition(newText)
 
-  }, [position, errorStoreName]);
+  }, [position, errorPosition]);
+
   const onChangeNamesSIA = useCallback((newText: string) => {
-    if (newText.trim().length <= 0) {
-      setErroStoreName(true)
-    }
-    else {
-      setErroStoreName(false)
-    }
     setSIANames(newText)
 
-  }, [ siaNames,errorStoreName]);
- 
+  }, [siaNames]);
+
 
 
   const items: string[] = Array.from({ length: 100 }, (_, index) => (index + 1).toString());
@@ -423,41 +571,42 @@ const mapImagesToFields = (selectedImages:any) => {
     setShowPicker(!showPicker);
   }, [selectedPickerValue, showPicker, setSelectedPickerValue]);
   const done1 = useCallback((value: string) => {
+    setErrorSecurityGuard(false)
     setSelectedPickerValue1(value);
     setShowPicker1(!showPicker1);
-  }, [selectedPickerValue1, showPicker1, setSelectedPickerValue1]);
-  
+  }, [selectedPickerValue1, showPicker1, setSelectedPickerValue1, errorSecurityGuard]);
+
   const doneGuardBehavior = useCallback((value: string) => {
     setSelectedGuardBehavior(value);
     setGuardBehavior(!guardBehavior);
-  }, [selectedGuardBehavior, guardBehavior, setSelectedGuardBehavior]);
+    setErrorGuardBehavior(false)
+  }, [selectedGuardBehavior, guardBehavior, setSelectedGuardBehavior, errorGuardBehavior]);
   const doneResponse = useCallback((value: string) => {
     setSelectedResponse(value);
+    setErrorResponseTime(false)
     setShowResponseOptions(!showResponseOptions);
-  }, [selectedResponse, showResponseOptions, setShowResponseOptions]);
+  }, [selectedResponse, showResponseOptions, setShowResponseOptions, errorResponseTime]);
 
   const doneRating = useCallback((value: string) => {
     setSelectedRating(value);
+    setErrorSecurity(false)
     setShowRatingOptions(!showRatingOptions);
-  }, [selectedRating, showRatingOptions, setShowRatingOptions]);
+  }, [selectedRating, showRatingOptions, setShowRatingOptions, errorSecurity]);
 
   return (
     <View style={styles.container}>
 
 
       <Header title={headings.UKSICAForm}
-        onBackPress={() => { navigation.navigate("UserTypeScreens")}}
+        onBackPress={() => { navigation.navigate("UserTypeScreens") }}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollView}
         extraHeight={100}
-        ref={scrollViewRef}
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
       >
-        <View ref={storeNameRef}>
 
-        <TextInput/>
-        </View>
         {/* Category: Store Information */}
         <View>
           <CustomText
@@ -466,10 +615,10 @@ const mapImagesToFields = (selectedImages:any) => {
             fontSize={fonts.h2}
             marginBottom={20}
             fontWeight="bold"
-            marginTop={-20}
+            marginTop={10}
           />
 
-          <View style={styles.formGroup}>
+          <View style={styles.formGroup} ref={storeNameRef}>
             <CustomText
               title={headings.StoreName}
               color={colors.gray}
@@ -490,21 +639,23 @@ const mapImagesToFields = (selectedImages:any) => {
               borderWidth={1}
               onChangeText={onChangeText}
               value={storeName}
-              error={false}
+              error={errorStoreName}
+
+
             />
-            {/* {errorStoreName==true && 
+            {errorStoreName == true &&
               <CustomText
-              title={placeholders.EnterStoreName}
-              color={colors.errorColorCode}
-              fontSize={fonts.p}
-              fontWeight="400"
-              marginLeft={5}
-              marginBottom={5}
-            />
-} */}
+                title={placeholders.EnterStoreName}
+                color={colors.errorColorCode}
+                fontSize={fonts.p}
+                fontWeight="400"
+                marginLeft={5}
+                marginBottom={5}
+              />
+            }
           </View>
 
-          <View style={styles.formGroup}>
+          <View style={styles.formGroup} ref={AddressRef}>
             <CustomText
               title={headings.StoreAddress}
               color={colors.gray}
@@ -525,8 +676,18 @@ const mapImagesToFields = (selectedImages:any) => {
               borderWidth={1}
               onChangeText={onChangeAddress}
               value={address}
-              error={false}
+              error={errorAddress}
             />
+            {errorAddress == true &&
+              <CustomText
+                title={placeholders.EnterStoreAddress}
+                color={colors.errorColorCode}
+                fontSize={fonts.p}
+                fontWeight="400"
+                marginLeft={5}
+                marginBottom={5}
+              />
+            }
           </View>
 
           <View style={styles.formGroup}>
@@ -542,6 +703,7 @@ const mapImagesToFields = (selectedImages:any) => {
               onPress={togglePicker}
               value={selectedPickerValue}
               text={placeholders.EnterNumberOfAisles}
+              error={false}
             />
           </View>
           {/* Category: Security Guard Details */}
@@ -555,7 +717,7 @@ const mapImagesToFields = (selectedImages:any) => {
               marginTop={10}
             />
 
-            <View style={styles.formGroup}>
+            <View style={styles.formGroup} ref={NoOfGuardsRef}>
               <CustomText
                 title={headings.NumberOfSecurityGuards}
                 color={colors.gray}
@@ -567,7 +729,21 @@ const mapImagesToFields = (selectedImages:any) => {
                 onPress={togglePicker1}
                 value={selectedPickerValue1}
                 text={placeholders.EnterNumberOfSecurityGuards}
+                error={errorSecurityGuard}
+
               />
+
+              {errorSecurityGuard == true &&
+                <CustomText
+                  title={placeholders.EnterNumberOfSecurityGuards}
+                  color={colors.errorColorCode}
+                  fontSize={fonts.p}
+                  fontWeight="400"
+                  marginLeft={5}
+                  marginBottom={5}
+                />
+              }
+
 
             </View>
             <View style={styles.formGroup}>
@@ -609,28 +785,28 @@ const mapImagesToFields = (selectedImages:any) => {
 
 
             <View style={styles.formGroup}>
-            <CustomText
-              title={"Names and SIA number of Guards"}
-              color={colors.gray}
-              fontSize={fonts.p}
-              fontWeight="400"
-              marginBottom={5}
-            />
+              <CustomText
+                title={"Names and SIA number of Guards"}
+                color={colors.gray}
+                fontSize={fonts.p}
+                fontWeight="400"
+                marginBottom={5}
+              />
 
-            <CustomInput
-              placeholder={"Enter names and SIA number"}
-              backgroundColor={colors.white}
-              borderRadius={10}
-              paddingLeft={10}
-              paddingRight={10}
-              paddingTop={10}
-              paddingBottom={10}
-              borderColor={colors.TextInputBorderColor}
-              borderWidth={1}
-              onChangeText={onChangeNamesSIA}
-              value={siaNames}
-              error={false}
-            />
+              <CustomInput
+                placeholder={"Enter names and SIA number"}
+                backgroundColor={colors.white}
+                borderRadius={10}
+                paddingLeft={10}
+                paddingRight={10}
+                paddingTop={10}
+                paddingBottom={10}
+                borderColor={colors.TextInputBorderColor}
+                borderWidth={1}
+                onChangeText={onChangeNamesSIA}
+                value={siaNames}
+                error={false}
+              />
             </View>
 
 
@@ -646,7 +822,7 @@ const mapImagesToFields = (selectedImages:any) => {
               />
 
 
-              <View style={styles.formGroup}>
+              <View style={styles.formGroup} ref={managerNameRef}>
                 <CustomText
                   title={headings.ManagerName}
                   color={colors.gray}
@@ -667,15 +843,26 @@ const mapImagesToFields = (selectedImages:any) => {
                   borderWidth={1}
                   onChangeText={onChangeName}
                   value={ManagerName}
-                  error={false}
+                  error={errorManagerName}
                 />
+                {errorManagerName == true &&
+                  <CustomText
+                    title={placeholders.EnterManagerName}
+                    color={colors.errorColorCode}
+                    fontSize={fonts.p}
+                    fontWeight="400"
+                    marginLeft={5}
+                    marginBottom={5}
+                  />
+                }
+
 
 
 
 
               </View>
 
-              <View style={styles.formGroup}>
+              <View style={styles.formGroup} ref={positionRef}>
                 <CustomText
                   title={headings.position}
                   color={colors.gray}
@@ -696,8 +883,18 @@ const mapImagesToFields = (selectedImages:any) => {
                   borderWidth={1}
                   onChangeText={onChangePosition}
                   value={position}
-                  error={false}
+                  error={errorPosition}
                 />
+                {errorPosition == true &&
+                  <CustomText
+                    title={placeholders.EnterPosition}
+                    color={colors.errorColorCode}
+                    fontSize={fonts.p}
+                    fontWeight="400"
+                    marginLeft={5}
+                    marginBottom={5}
+                  />
+                }
 
 
               </View>
@@ -713,7 +910,7 @@ const mapImagesToFields = (selectedImages:any) => {
 
 
                 <RadioGroup
-                  options={radioOptions1}
+                  options={radioOptions2}
                   selectedValue={selectedAware}
                   onValueChange={handleAware}
                 />
@@ -764,7 +961,7 @@ const mapImagesToFields = (selectedImages:any) => {
                 />
 
                 <RadioGroup
-                  options={radioOptions2}
+                  options={radioOptions1}
                   selectedValue={selectedCCTV}
                   onValueChange={handleCCTV}
                 />
@@ -805,7 +1002,7 @@ const mapImagesToFields = (selectedImages:any) => {
               />
 
 
-              <View style={styles.formGroup}>
+              <View style={styles.formGroup} ref={guardBehaviorRef}>
                 <CustomText
                   title={headings.securityGraudBehavior}
                   color={colors.gray}
@@ -818,14 +1015,25 @@ const mapImagesToFields = (selectedImages:any) => {
                   onPress={toggleGuardBehavior}
                   value={selectedGuardBehavior}
                   text={placeholders.guardBehavior}
+                  error={errorGuardBehavior}
                 />
+                {errorGuardBehavior == true &&
+                  <CustomText
+                    title={placeholders.guardBehavior}
+                    color={colors.errorColorCode}
+                    fontSize={fonts.p}
+                    fontWeight="400"
+                    marginLeft={5}
+                    marginBottom={5}
+                  />
+                }
 
 
 
               </View>
 
 
-              <View style={styles.formGroup}>
+              <View style={styles.formGroup} ref={responseTimeRef}>
                 <CustomText
                   title={headings.ResponseTimeOfGuards}
                   color={colors.gray}
@@ -838,7 +1046,18 @@ const mapImagesToFields = (selectedImages:any) => {
                   onPress={toggleResponseBehavior}
                   value={selectedResponse}
                   text={placeholders.guardResponseTime}
+                  error={errorResponseTime}
                 />
+                {errorResponseTime == true &&
+                  <CustomText
+                    title={placeholders.guardResponseTime}
+                    color={colors.errorColorCode}
+                    fontSize={fonts.p}
+                    fontWeight="400"
+                    marginLeft={5}
+                    marginBottom={5}
+                  />
+                }
 
 
 
@@ -875,7 +1094,7 @@ const mapImagesToFields = (selectedImages:any) => {
                 />
 
                 <FlatList
-                  data={selectedImages.length > 0 && selectedImages.length < 3 ? [...selectedImages, "ADD_BUTTON"] : selectedImages} 
+                  data={selectedImages.length > 0 && selectedImages.length < 3 ? [...selectedImages, "ADD_BUTTON"] : selectedImages}
                   renderItem={({ item }) =>
                     item === 'ADD_BUTTON' ? renderAddImageButton() : renderAddItem({ item })
                   }
@@ -935,7 +1154,7 @@ const mapImagesToFields = (selectedImages:any) => {
             </View>
 
 
-            <View style={styles.formGroup}>
+            <View style={styles.formGroup} ref={securityRef}>
               <CustomText
                 title={headings.securityRating}
                 color={colors.gray}
@@ -948,7 +1167,19 @@ const mapImagesToFields = (selectedImages:any) => {
                 onPress={toggleRatingBehavior}
                 value={selectedRating}
                 text={placeholders.OverallSecurityRating}
+                error={errorSecurity}
               />
+              {errorSecurity == true &&
+                <CustomText
+                  title={placeholders.OverallSecurityRating}
+                  color={colors.errorColorCode}
+                  fontSize={fonts.p}
+                  fontWeight="400"
+                  marginLeft={5}
+                  marginBottom={5}
+                />
+              }
+
 
 
 
@@ -966,7 +1197,7 @@ const mapImagesToFields = (selectedImages:any) => {
               {signature ?
                 <TouchableOpacity onPress={addSignature}>
                   <Image
-                    source={{ uri: signature }}
+                    source={{ uri: signature.uri }}
                     style={styles.signatureImage}
                     resizeMode="contain"
 
@@ -975,14 +1206,14 @@ const mapImagesToFields = (selectedImages:any) => {
 
                 :
 
-                <TouchableOpacity onPress={addSignature} style={{ flex: 1 }}>
+                <TouchableOpacity onPress={addSignature} style={{ flex: 1 }} >
 
                   <CustomTextInput
                     placeholder={placeholders.addSignature}
                     pointerEvents="none"
-                    value={value}
+                    value={""}
                     onChangeText={() => { }}
-                    error={false}
+                    error={errorSign}
                     backgroundColor={colors.white}
                     borderRadius={10}
                     paddingLeft={10}
@@ -993,8 +1224,24 @@ const mapImagesToFields = (selectedImages:any) => {
                     borderWidth={1}
                     editable={false}
                     color={colors.black}
+
                   />
+
                 </TouchableOpacity>
+
+
+
+
+              }
+              {errorSign == true &&
+                <CustomText
+                  title={placeholders.addSignature}
+                  color={colors.errorColorCode}
+                  fontSize={fonts.p}
+                  fontWeight="400"
+                  marginLeft={5}
+                  marginBottom={5}
+                />
               }
             </View>
 
@@ -1067,6 +1314,7 @@ const mapImagesToFields = (selectedImages:any) => {
         isVisible={modalSignVisible}
         onClose={() => setModalSignVisible(false)}
         onSaveSignature={handleSaveSignature}
+
       />
     </View>
   );

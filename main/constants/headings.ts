@@ -27,6 +27,7 @@ const headings={
     securityRating:"Overall Security Rating",
     addphotos:'Add Relevant Photos',
     addSignature:'Add Signature',
+   "errorMessage":"Something went wrong. Try again later.",
     
 }
 export default headings;
