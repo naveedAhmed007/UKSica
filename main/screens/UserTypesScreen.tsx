@@ -2,18 +2,21 @@ import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, BackHandler } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 
 const UserTypesScreen = () => {
-    const navigation:any=useNavigation();
+const focused:any=useIsFocused();
+  const navigation:any=useNavigation();
     const goToSurvey=()=>{
         navigation.navigate("Form")
     
       }
       useEffect(() => {
+        if(focused){
         const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
         return () => backHandler.remove()
-      }, [])
+        }
+      }, [focused])
     
     return (
     <LinearGradient colors={['#000080', '#87CEEB']} style={styles.container}>
