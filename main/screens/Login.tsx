@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import validator from "validator";
 import { postData } from "../apis/ApiServices";
 import { endpoints } from "../apis/endPoints";
@@ -8,8 +8,7 @@ import {
   colors, fonts, headings, KeyboardAwareScrollView, LinearGradient,
   MaterialIcons, moderateScale, Platform, StyleSheet,
   Text, TouchableOpacity, View
-}
-  from "../utils/imports";
+} from "../utils/imports";
 import CustomTextInput from "../components/CustomInput";
 import CustomText from "../components/CustomText";
 import Loader from "../components/Loader";
@@ -17,103 +16,62 @@ import CustomButton from "../components/CustomButton";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>('');
-  const [emailError, setEmailError] = useState<boolean>(false);
-  const [emailText, setEmailText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ email: string | null; password: string | null }>({ email: null, password: null });
   const [showPassword, setShowPassword] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
-  const navigation: any = useNavigation();
+  const navigation = useNavigation();
 
+  const validateInputs = () => {
+    const emailError = !validator.isEmail(email) ? 'Invalid email' : null;
+    const passwordError = password.trim().length === 0 ? 'Enter password' : null;
+
+    setErrors({ email: emailError, password: passwordError });
+    
+    return !emailError && !passwordError;
+  };
 
   const goToSurvey = async () => {
-    try {
-      if (email.trim().length <= 0) {
-        setEmailError(true);
-        setPasswordError(false);
-        setEmailText('Enter email');
-      } else if (!validator.isEmail(email)) {
-        setEmailError(true);
-        setPasswordError(false);
-        setEmailText('Invalid email');
-      } else if (password.trim().length <= 0) {
-        setEmailError(false);
-        setPasswordError(true);
-      } else {
-        setShowLoader(true)
-        let data = {
-          Email: email.trim(),
-          password: password.trim(),
-          role: 'user',
-        };
-        setEmailError(false);
-        setPasswordError(false);
-        const result: any = await postData(endpoints.login, data);
-        if (result.success == true) {
-          navigation.navigate("UserTypeScreens")
+    if (!validateInputs()) return;
 
-        }
-        else {
-          showToast({
-            text1: result.message,
-            type: "error"
-          })
-        }
+    setShowLoader(true);
+    try {
+      const data = { Email: email.trim(), password: password.trim(), role: 'user' };
+      const result: any = await postData(endpoints.login, data);
+
+      if (result.success) {
+        navigation.navigate("UserTypeScreens");
+      } else {
+        showToast({ text1: result.message, type: "error" });
       }
     } catch (error) {
-      showToast({
-        text1: headings.errorMessage,
-        type: "error"
-      })
-    }
-    finally {
-      setShowLoader(false)
+      showToast({ text1: headings.errorMessage, type: "error" });
+    } finally {
+      setShowLoader(false);
     }
   };
 
-  const onChangeEmail = useCallback(
-    (newText: string) => {
-      if (newText.trim().length <= 0) {
-        setEmailError(true);
-        setEmailText('Enter email');
-      } else if (!validator.isEmail(newText)) {
-        setEmailError(true);
-        setEmailText('Invalid email');
-      } else {
-        setEmailError(false);
-      }
-      setEmail(newText);
-    },
-    [email, emailError]
-  );
+  const onChangeEmail = useCallback((newText: string) => {
+    setEmail(newText);
+    if (newText.trim().length === 0) {
+      setErrors(prev => ({ ...prev, email: 'Enter email' }));
+    } else if (!validator.isEmail(newText)) {
+      setErrors(prev => ({ ...prev, email: 'Invalid email' }));
+    } else {
+      setErrors(prev => ({ ...prev, email: null }));
+    }
+  }, []);
 
-  const onChangePassword = useCallback(
-    (newText: string) => {
-      if (newText.trim().length <= 0) {
-        setPasswordError(true);
-      } else {
-        setPasswordError(false);
-      }
-      setPassword(newText);
-    },
-    [password, passwordError]
-  );
+  const onChangePassword = useCallback((newText: string) => {
+    setPassword(newText);
+    setErrors(prev => ({ ...prev, password: newText.trim().length === 0 ? 'Enter password' : null }));
+  }, []);
 
   return (
-    <LinearGradient colors={[colors.gradientColor1, colors.gradientColor2]}
-      style={styles.container}>
+    <LinearGradient colors={[colors.gradientColor1, colors.gradientColor2]} style={styles.container}>
       <View style={styles.logoContainer}>
-        <CustomText title={headings.UK}
-          color={colors.loginText1Color}
-          fontSize={40}
-          fontWeight="bold"
-        />
-        <CustomText
-          title={headings.SICA}
-          color={colors.white}
-          fontSize={40}
-          fontWeight="bold"
-        />
+        <CustomText title={headings.UK} color={colors.loginText1Color} fontSize={40} fontWeight="bold" />
+        <CustomText title={headings.SICA} color={colors.white} fontSize={40} fontWeight="bold" />
       </View>
 
       <KeyboardAwareScrollView
@@ -121,51 +79,28 @@ const LoginScreen = () => {
         extraHeight={Platform.OS === 'ios' ? moderateScale(100) : moderateScale(150)}
       >
         <View style={styles.inputWrapper}>
-          <View
-            style={[
-              styles.inputContainer,
-              { borderColor: emailError === true ? colors.errorColorCode : colors.borderColor },
-            ]}
-          >
-            <MaterialIcons name="email"
-              size={fonts.logoH1}
-              color={colors.black}
-              style={styles.iconStyle} />
+          <View style={[styles.inputContainer, { borderColor: errors.email ? colors.errorColorCode : colors.borderColor }]}>
+            <MaterialIcons name="email" size={fonts.logoH1} color={colors.black} style={styles.iconStyle} />
             <CustomTextInput
-              placeholder={'Email'}
+              placeholder='Email'
               onChangeText={onChangeEmail}
               value={email}
-              error={false}
               color={colors.black}
               backgroundColor="transparent"
               borderWidth={0}
               placeholderTextColor={colors.black}
             />
           </View>
-          {emailError === true && (
-            <CustomText
-              title={emailText}
-              color={colors.errorColorCode}
-              fontSize={fonts.p}
-              fontWeight="400"
-              marginLeft={5}
-              marginTop={-10}
-              marginBottom={5}
-            />
+          {errors.email && (
+            <CustomText title={errors.email} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
           )}
 
-          <View
-            style={[
-              styles.inputContainer,
-              { borderColor: passwordError === true ? colors.errorColorCode : colors.borderColor },
-            ]}
-          >
+          <View style={[styles.inputContainer, { borderColor: errors.password ? colors.errorColorCode : colors.borderColor }]}>
             <MaterialIcons name="lock" size={24} color={colors.black} style={styles.iconStyle} />
             <CustomTextInput
-              placeholder={'Password'}
+              placeholder='Password'
               onChangeText={onChangePassword}
               value={password}
-              error={false}
               secureTextEntry={!showPassword}
               color={colors.black}
               backgroundColor="transparent"
@@ -176,19 +111,11 @@ const LoginScreen = () => {
               <MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} size={24} color={colors.black} />
             </TouchableOpacity>
           </View>
-          {passwordError === true && (
-            <CustomText
-              title={'Enter password'}
-              color={colors.errorColorCode}
-              fontSize={fonts.p}
-              fontWeight="400"
-              marginLeft={5}
-              marginTop={-10}
-              marginBottom={5}
-            />
+          {errors.password && (
+            <CustomText title={errors.password} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
           )}
-          
-          <CustomButton title={headings.login} onPress={goToSurvey} />
+
+          <CustomButton title={headings.login} onPress={goToSurvey} disabled={showLoader} />
         </View>
       </KeyboardAwareScrollView>
       {showLoader && <Loader />}
@@ -207,7 +134,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
   },
-
   avoidingContainer: {
     width: '100%',
     paddingHorizontal: 20,
@@ -247,8 +173,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
-  
-
 });
 
 export default LoginScreen;
