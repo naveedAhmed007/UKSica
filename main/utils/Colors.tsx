@@ -13,4 +13,5 @@ export const colors={
     gradientColor1:"#808080",
     loginText1Color:"#E52553",
     borderColor:'#ccc',
+    userButtonColors:"#ff4500",
 }

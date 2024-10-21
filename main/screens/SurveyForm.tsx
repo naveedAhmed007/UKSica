@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import CustomText from "../components/CustomText";
 import Header from "../components/Header";
 import CustomInput from "../components/CustomInput";
@@ -7,32 +7,31 @@ import PickerComponent from "../components/DropDownPicker";
 import RadioGroup from '../components/RadioGroup';
 import ImagePickerModal from "../components/ImagePickerModal";
 import {
-  AntDesign, colors, FlatList, fonts, headings,
-  Icon, Image, ImagePickerResponse, KeyboardAwareScrollView, launchCamera, launchImageLibrary, moderateScale,
+  AntDesign, colors, FlatList, fonts, 
+  headings,Icon, Image, ImagePickerResponse, 
+  KeyboardAwareScrollView, launchCamera, launchImageLibrary, moderateScale,
   placeholders, StyleSheet, TextInput, TouchableOpacity,
-  uuid, View
+  uuid, View,Text,findNodeHandle,Dimensions,
+  moment,
+
 } from "../utils/imports";
-import moment from 'moment';
 import CustomTextInput from "../components/CustomInput";
-import { Alert, Dimensions, findNodeHandle, Text } from "react-native";
 import SignatureModal from "../components/SignBoard";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { postData } from "../apis/ApiServices";
 import { endpoints } from "../apis/endPoints";
 import { showToast } from "../components/ShowToast";
 import Loader from "../components/Loader";
+import { screenNames } from "../navigation/screenNames";
 
 const SurveyForm = () => {
-  const isFocused: any = useIsFocused();
-
-
-
   const [storeName, setStoreName] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [ManagerName, setManagerName] = useState<string>("");
   const [position, setPosition] = useState<string>("");
   const [siaNames, setSIANames] = useState<string>("");
   const [attention, setAttention] = useState<string>("");
+  
   const [showLoader, setShowLoader] = useState<boolean>(false);
 
 
@@ -76,16 +75,16 @@ const SurveyForm = () => {
   const [modalSignVisible, setModalSignVisible] = useState(false);
   const [signature, setSignature] = useState<any>(null);
 
-  const scrollRef = useRef(null);
-  const storeNameRef = useRef(null);
-  const AddressRef = useRef(null);
-  const AislesRef = useRef(null);
-  const NoOfGuardsRef = useRef(null);
-  const managerNameRef = useRef(null);
-  const positionRef = useRef(null);
-  const guardBehaviorRef = useRef(null);
-  const responseTimeRef = useRef(null);
-  const securityRef = useRef(null);
+  const scrollRef:any = useRef(null);
+  const storeNameRef:any = useRef(null);
+  const AddressRef:any = useRef(null);
+  const AislesRef:any = useRef(null);
+  const NoOfGuardsRef:any = useRef(null);
+  const managerNameRef:any = useRef(null);
+  const positionRef:any = useRef(null);
+  const guardBehaviorRef:any = useRef(null);
+  const responseTimeRef:any = useRef(null);
+  const securityRef:any = useRef(null);
   // const storeNameRef = useRef(null);
   // const storeNameRef = useRef(null);
   // const storeNameRef = useRef(null);
@@ -94,7 +93,8 @@ const SurveyForm = () => {
 
   const _scrollToInput = (nodeHandle: any) => {
     if (scrollRef.current) {
-      scrollRef.current.scrollToFocusedInput(nodeHandle);
+      const yPosition = nodeHandle.y;
+      scrollRef?.current?.scrollToFocusedInput(nodeHandle);
     }
   };
 
@@ -284,7 +284,7 @@ const SurveyForm = () => {
           Are_There_Any_Issues: selectedIssues.value,
           Issues_Details: attention,
           Overall_Security_Rating: selectedRating.substring(0, 1),
-          Auditor_Name: "Bilal",
+          Auditor_Name: "",
           Relevant_Photo_File1: mappedImages.Relevant_Photo_File1,
           Relevant_Photo_File2: mappedImages.Relevant_Photo_File2,
           Relevant_Photo_File3: mappedImages.Relevant_Photo_File3,
@@ -299,10 +299,12 @@ const SurveyForm = () => {
 
 
         const result: any = await postData(endpoints.AddAuditDetails, formDataFields);
-        console.log("result============", result)
-
+       
         if (result.success==true) {
-          navigation.navigate("UserTypeScreens")
+      showToast({ text1: headings.successMessage, type: "info" });
+
+
+          navigation.navigate(screenNames.userType)
 
 
         }
@@ -620,7 +622,7 @@ const SurveyForm = () => {
 
 
       <Header title={headings.UKSICAForm}
-        onBackPress={() => { navigation.navigate("UserTypeScreens") }}
+        onBackPress={() => { navigation.navigate(screenNames.userType) }}
       />
       <KeyboardAwareScrollView
         contentContainerStyle={styles.scrollView}

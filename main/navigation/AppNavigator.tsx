@@ -7,7 +7,7 @@ const AppNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
-    <Stack.Navigator initialRouteName={screenNames.login}>
+    <Stack.Navigator initialRouteName={screenNames.login} screenOptions={{headerShown:false}}>
       {screenData.map((screen) => (
         <Stack.Screen 
           key={screen.name} 

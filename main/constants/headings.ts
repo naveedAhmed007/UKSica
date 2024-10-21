@@ -10,9 +10,9 @@ const headings={
     SIABadgeVisible:"SIA Badge Visible?",
     CompanyLogoVisible:"Company Logo Visible?",
     ManagerDetails:'Manager Details',
-    ManagerName:'Manager Name',
+    ManagerName:'Security Person Name',
     position:'Position',
-    awareOf:"Manager Aware of Security Proc?",
+    awareOf:"Security Person Aware of Security Proc?",
     GDPRCompliance:"GDPR Compliance",
     IsGDPRController:'Is GDPR Controller Information Available?',
     IsCCTVWarning:"CCTV Warning Sign Displayed?",
@@ -27,10 +27,14 @@ const headings={
     securityRating:"Overall Security Rating",
     addphotos:'Add Relevant Photos',
     addSignature:'Add Signature',
-   "errorMessage":"Something went wrong. Try again later.",
+   errorMessage:"Something went wrong. Try again later.",
    UK:'UK',
    SICA:' SICA',
    login:'Login',
+   select:"Select User Type",
+   form1:"Form 1",
+   form2:"Form 2",
+   successMessage:"Form submitted successfully! Thank you."
 
     
 }
