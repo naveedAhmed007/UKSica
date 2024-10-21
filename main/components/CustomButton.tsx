@@ -15,16 +15,20 @@ interface Props {
   onPress: () => void;
   activityOpacity?:number,
   style?: StyleProp<ViewStyle>;
+  disabled?:boolean,
 }
 
-const CustomButton: FC<Props> = ({ title, onPress, style,activityOpacity=0}) => {
+const CustomButton: FC<Props> = ({ title, onPress, style,
+  activityOpacity=0,
+  disabled=false}) => {
   return (
     <TouchableOpacity
       style={[styles.button, style]}
       onPress={onPress}
       activeOpacity={activityOpacity} 
       accessibilityRole="button" 
-    accessibilityLabel={title} 
+    accessibilityLabel={title}
+    disabled={disabled} 
     >
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>

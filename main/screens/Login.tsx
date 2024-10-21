@@ -13,21 +13,24 @@ import CustomTextInput from "../components/CustomInput";
 import CustomText from "../components/CustomText";
 import Loader from "../components/Loader";
 import CustomButton from "../components/CustomButton";
-
+import { loginErrorsInterface } from "../utils/interfaces";
 const LoginScreen = () => {
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errors, setErrors] = useState<{ email: string | null; password: string | null }>({ email: null, password: null });
+  const [errors, setErrors] = useState<loginErrorsInterface>(
+    { email: null, password: null }
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
-  const navigation = useNavigation();
+  const navigation:any = useNavigation();
 
   const validateInputs = () => {
     const emailError = !validator.isEmail(email) ? 'Invalid email' : null;
     const passwordError = password.trim().length === 0 ? 'Enter password' : null;
 
     setErrors({ email: emailError, password: passwordError });
-    
+
     return !emailError && !passwordError;
   };
 
@@ -36,7 +39,9 @@ const LoginScreen = () => {
 
     setShowLoader(true);
     try {
-      const data = { Email: email.trim(), password: password.trim(), role: 'user' };
+      const data = { Email: email.trim(), 
+        password: password.trim(), 
+        role: 'user' };
       const result: any = await postData(endpoints.login, data);
 
       if (result.success) {
@@ -88,8 +93,9 @@ const LoginScreen = () => {
               color={colors.black}
               backgroundColor="transparent"
               borderWidth={0}
-              placeholderTextColor={colors.black}
-            />
+              placeholderTextColor={colors.black} 
+              error={false}            
+              />
           </View>
           {errors.email && (
             <CustomText title={errors.email} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
@@ -105,8 +111,9 @@ const LoginScreen = () => {
               color={colors.black}
               backgroundColor="transparent"
               borderWidth={0}
-              placeholderTextColor={colors.black}
-            />
+              placeholderTextColor={colors.black} 
+              error={false}            
+              />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               <MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} size={24} color={colors.black} />
             </TouchableOpacity>
@@ -115,7 +122,9 @@ const LoginScreen = () => {
             <CustomText title={errors.password} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
           )}
 
-          <CustomButton title={headings.login} onPress={goToSurvey} disabled={showLoader} />
+          <CustomButton title={headings.login} 
+          onPress={goToSurvey} 
+          disabled={showLoader} />
         </View>
       </KeyboardAwareScrollView>
       {showLoader && <Loader />}
