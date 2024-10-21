@@ -28,6 +28,10 @@ const headings={
     addphotos:'Add Relevant Photos',
     addSignature:'Add Signature',
    "errorMessage":"Something went wrong. Try again later.",
+   UK:'UK',
+   SICA:' SICA',
+   login:'Login',
+
     
 }
 export default headings;

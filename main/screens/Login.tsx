@@ -1,20 +1,19 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { moderateScale } from 'react-native-size-matters';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import LinearGradient from 'react-native-linear-gradient';
-import { colors } from '../utils/Colors';
-import { useNavigation } from '@react-navigation/native';
-import CustomTextInput from '../components/CustomInput';
-import validator from 'validator';
-import CustomText from '../components/CustomText';
-import { postData } from '../apis/ApiServices';
-import { endpoints } from '../apis/endPoints';
-import Loader from '../components/Loader';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import fonts from '../utils/fonts';
-import { showToast } from '../components/ShowToast';
-import { headings } from '../constants';
+import { useNavigation } from "@react-navigation/native";
+import { useCallback, useRef, useState } from "react";
+import validator from "validator";
+import { postData } from "../apis/ApiServices";
+import { endpoints } from "../apis/endPoints";
+import { showToast } from "../components/ShowToast";
+import {
+  colors, fonts, headings, KeyboardAwareScrollView, LinearGradient,
+  MaterialIcons, moderateScale, Platform, StyleSheet,
+  Text, TouchableOpacity, View
+}
+  from "../utils/imports";
+import CustomTextInput from "../components/CustomInput";
+import CustomText from "../components/CustomText";
+import Loader from "../components/Loader";
+import CustomButton from "../components/CustomButton";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState<string>('');
@@ -22,10 +21,10 @@ const LoginScreen = () => {
   const [emailText, setEmailText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<boolean>(false);
-  const passwordInputRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const navigation: any = useNavigation();
+
 
   const goToSurvey = async () => {
     try {
@@ -50,7 +49,6 @@ const LoginScreen = () => {
         setEmailError(false);
         setPasswordError(false);
         const result: any = await postData(endpoints.login, data);
-        console.log("result===========",result)
         if (result.success == true) {
           navigation.navigate("UserTypeScreens")
 
@@ -102,30 +100,43 @@ const LoginScreen = () => {
   );
 
   return (
-    <LinearGradient colors={['#808080', '#f0f8ff']} style={styles.container}>
+    <LinearGradient colors={[colors.gradientColor1, colors.gradientColor2]}
+      style={styles.container}>
       <View style={styles.logoContainer}>
-        <Text style={[styles.logoText, { color: '#E52553' }]}>UK</Text>
-        <Text style={[styles.logoText, { color: '#fff' }]}> SICA</Text>
+        <CustomText title={headings.UK}
+          color={colors.loginText1Color}
+          fontSize={40}
+          fontWeight="bold"
+        />
+        <CustomText
+          title={headings.SICA}
+          color={colors.white}
+          fontSize={40}
+          fontWeight="bold"
+        />
       </View>
 
       <KeyboardAwareScrollView
         contentContainerStyle={styles.avoidingContainer}
-        extraHeight={Platform.OS === 'ios' ? 100 : 150}
+        extraHeight={Platform.OS === 'ios' ? moderateScale(100) : moderateScale(150)}
       >
         <View style={styles.inputWrapper}>
           <View
             style={[
               styles.inputContainer,
-              { borderColor: emailError === true ? colors.errorColorCode : '#ccc' },
+              { borderColor: emailError === true ? colors.errorColorCode : colors.borderColor },
             ]}
           >
-            <Icon name="email" size={24} color="#000" style={styles.iconStyle} />
+            <MaterialIcons name="email"
+              size={fonts.logoH1}
+              color={colors.black}
+              style={styles.iconStyle} />
             <CustomTextInput
               placeholder={'Email'}
               onChangeText={onChangeEmail}
               value={email}
               error={false}
-              color="000"
+              color={colors.black}
               backgroundColor="transparent"
               borderWidth={0}
               placeholderTextColor={colors.black}
@@ -146,23 +157,23 @@ const LoginScreen = () => {
           <View
             style={[
               styles.inputContainer,
-              { borderColor: passwordError === true ? colors.errorColorCode : '#ccc' },
+              { borderColor: passwordError === true ? colors.errorColorCode : colors.borderColor },
             ]}
           >
-            <Icon name="lock" size={24} color="#000" style={styles.iconStyle} />
+            <MaterialIcons name="lock" size={24} color={colors.black} style={styles.iconStyle} />
             <CustomTextInput
               placeholder={'Password'}
               onChangeText={onChangePassword}
               value={password}
               error={false}
               secureTextEntry={!showPassword}
-              color="000"
+              color={colors.black}
               backgroundColor="transparent"
               borderWidth={0}
               placeholderTextColor={colors.black}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <Icon name={showPassword ? 'visibility' : 'visibility-off'} size={24} color="#000" />
+              <MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} size={24} color={colors.black} />
             </TouchableOpacity>
           </View>
           {passwordError === true && (
@@ -176,17 +187,8 @@ const LoginScreen = () => {
               marginBottom={5}
             />
           )}
-
-          <View style={styles.forgotPasswordContainer}>
-            <TouchableOpacity onPress={() => { }}>
-              <Text style={styles.forgotText}>Forgot Password?</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Login Button */}
-          <TouchableOpacity style={styles.loginButton} onPress={goToSurvey}>
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
+          
+          <CustomButton title={headings.login} onPress={goToSurvey} />
         </View>
       </KeyboardAwareScrollView>
       {showLoader && <Loader />}
@@ -198,11 +200,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  logoText: {
-    fontSize: 40,
-    color: '#fff',
-    fontWeight: 'bold',
+  logoContainer: {
+    backgroundColor: colors.headerColor,
+    paddingVertical: moderateScale(100),
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
+
   avoidingContainer: {
     width: '100%',
     paddingHorizontal: 20,
@@ -231,7 +236,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   iconStyle: {
-    marginRight: 10,
+    marginRight: moderateScale(10),
   },
   forgotPasswordContainer: {
     width: '100%',
@@ -242,28 +247,8 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
-  loginButton: {
-    backgroundColor: colors.headerColor,
-    paddingVertical: 12,
-    borderRadius: 25,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-    elevation: 3,
-  },
-  loginText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  logoContainer: {
-    backgroundColor: colors.headerColor,
-    paddingVertical: moderateScale(100),
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
+  
+
 });
 
 export default LoginScreen;
