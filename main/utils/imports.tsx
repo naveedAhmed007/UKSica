@@ -3,7 +3,7 @@ import {
     TextInput, TextStyle, ViewStyle, TextInputProps,
     DimensionValue,TouchableOpacity,FlatList,Image,
     Modal,StyleProp,LogBox,BackHandler,
-    Dimensions, findNodeHandle,
+    Dimensions, findNodeHandle,StatusBar
 } from "react-native"
 import { moderateScale } from "react-native-size-matters";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -21,6 +21,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { Platform } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
+import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -33,7 +34,7 @@ export {
     launchImageLibrary, Modal, SignatureScreen, Dimensions,
     validator, endpoints, LinearGradient, 
     Platform, MaterialIcons,LogBox,BackHandler,
-    findNodeHandle,moment
+    SafeAreaProvider,findNodeHandle,moment,SafeAreaView,StatusBar
 };
     
 export type { ViewStyle, TextInputProps, DimensionValue, 

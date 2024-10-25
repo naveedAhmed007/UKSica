@@ -14,6 +14,9 @@ const UserTypesScreen = () => {
   [navigation])
   useEffect(() => {
     if (focused) {
+      navigation.setOptions({
+        gestureEnabled: false,
+      });
       const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true)
       return () => backHandler.remove()
     }

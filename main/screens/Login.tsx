@@ -7,7 +7,8 @@ import { showToast } from "../components/ShowToast";
 import {
   colors, fonts, headings, KeyboardAwareScrollView, LinearGradient,
   MaterialIcons, moderateScale, Platform, StyleSheet,
-  Text, TouchableOpacity, View
+  Text, TouchableOpacity, View, SafeAreaView,
+  StatusBar
 } from "../utils/imports";
 import CustomTextInput from "../components/CustomInput";
 import CustomText from "../components/CustomText";
@@ -76,65 +77,70 @@ const LoginScreen = () => {
   }, []);
 
   return (
-    <LinearGradient colors={[colors.gradientColor1, colors.gradientColor2]} style={styles.container}>
-      <View style={styles.logoContainer}>
-        <CustomText title={headings.UK} color={colors.loginText1Color} fontSize={40} fontWeight="bold" />
-        <CustomText title={headings.SICA} color={colors.white} fontSize={40} fontWeight="bold" />
-      </View>
-
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.avoidingContainer}
-        extraHeight={Platform.OS === 'ios' ? moderateScale(100) : moderateScale(150)}
-      >
-        <View style={styles.inputWrapper}>
-          <View style={[styles.inputContainer, { borderColor: errors.email ? colors.errorColorCode : colors.borderColor }]}>
-            <MaterialIcons name="email" size={fonts.logoH1} color={colors.black} style={styles.iconStyle} />
-            <CustomTextInput
-              placeholder='Email'
-              onChangeText={onChangeEmail}
-              value={email}
-              color={colors.black}
-              backgroundColor="transparent"
-              borderWidth={0}
-              placeholderTextColor={colors.black}
-              error={false}
-            />
-          </View>
-          {errors.email && (
-            <CustomText title={errors.email} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
-          )}
-
-          <View style={[styles.inputContainer, { borderColor: errors.password ? colors.errorColorCode : colors.borderColor }]}>
-            <MaterialIcons name="lock" size={24} color={colors.black} style={styles.iconStyle} />
-            <CustomTextInput
-              placeholder='Password'
-              onChangeText={onChangePassword}
-              value={password}
-              secureTextEntry={!showPassword}
-              color={colors.black}
-              backgroundColor="transparent"
-              borderWidth={0}
-              placeholderTextColor={colors.black}
-              error={false}
-            />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} size={24} color={colors.black} />
-            </TouchableOpacity>
-          </View>
-          {errors.password && (
-            <CustomText title={errors.password} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
-          )}
-
-          <CustomButton
-            title={headings.login}
-            onPress={goToSurvey}
-            disabled={showLoader}
-            
-          />
+    <SafeAreaView style={{flex:1}}
+    edges={["top"]}
+    >
+      
+      <LinearGradient colors={[colors.gradientColor1, colors.gradientColor2]} style={styles.container}>
+        <View style={styles.logoContainer}>
+          <CustomText title={headings.UK} color={colors.loginText1Color} fontSize={40} fontWeight="bold" />
+          <CustomText title={headings.SICA} color={colors.white} fontSize={40} fontWeight="bold" />
         </View>
-      </KeyboardAwareScrollView>
-      {showLoader && <Loader />}
-    </LinearGradient>
+
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.avoidingContainer}
+          extraHeight={Platform.OS === 'ios' ? moderateScale(100) : moderateScale(150)}
+        >
+          <View style={styles.inputWrapper}>
+            <View style={[styles.inputContainer, { borderColor: errors.email ? colors.errorColorCode : colors.borderColor }]}>
+              <MaterialIcons name="email" size={fonts.logoH1} color={colors.black} style={styles.iconStyle} />
+              <CustomTextInput
+                placeholder='Email'
+                onChangeText={onChangeEmail}
+                value={email}
+                color={colors.black}
+                backgroundColor="transparent"
+                borderWidth={0}
+                placeholderTextColor={colors.black}
+                error={false}
+              />
+            </View>
+            {errors.email && (
+              <CustomText title={errors.email} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
+            )}
+
+            <View style={[styles.inputContainer, { borderColor: errors.password ? colors.errorColorCode : colors.borderColor }]}>
+              <MaterialIcons name="lock" size={24} color={colors.black} style={styles.iconStyle} />
+              <CustomTextInput
+                placeholder='Password'
+                onChangeText={onChangePassword}
+                value={password}
+                secureTextEntry={!showPassword}
+                color={colors.black}
+                backgroundColor="transparent"
+                borderWidth={0}
+                placeholderTextColor={colors.black}
+                error={false}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <MaterialIcons name={showPassword ? 'visibility' : 'visibility-off'} size={24} color={colors.black} />
+              </TouchableOpacity>
+            </View>
+            {errors.password && (
+              <CustomText title={errors.password} color={colors.errorColorCode} fontSize={fonts.p} fontWeight="400" marginLeft={5} marginTop={-10} marginBottom={5} />
+            )}
+
+            <CustomButton
+              title={headings.login}
+              onPress={goToSurvey}
+              disabled={showLoader}
+
+            />
+          </View>
+        </KeyboardAwareScrollView>
+        {showLoader && <Loader />}
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
 
