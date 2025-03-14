@@ -1,6 +1,7 @@
 const headings={
     storeName:"Store Name",
     UKSICAForm:"UKSICA Audit Form",
+    UKSICAIntelligenceForm:"UK Intelligence Analysis Form",
     StoreInformation:"Store Information",
     StoreName:"Store Name",
     StoreAddress:"Address",
@@ -34,7 +35,20 @@ const headings={
    select:"Select User Type",
    form1:"Form 1",
    form2:"Form 2",
-   successMessage:"Form submitted successfully! Thank you."
+   successMessage:"Form submitted successfully! Thank you.",
+
+   suspectedExploiter:"Suspected Exploiter(s)",
+    nameAliases: "Name(s)/Alias(es)",
+    dateOfBirth: "Date of Birth (if known)",
+    nationalityEthnicity: "Nationality/Ethnicity",
+    addresses: "Address(es)",
+    contactDetails: "Contact Details (Phone/Email)",
+    businessAffiliation: "Business/Organisation Affiliation",
+    vehicleDetails: "Vehicle Details",
+    subjectInformation:"Subject Information (if available)",
+  
+
+
 
     
 }

@@ -21,9 +21,10 @@ const Header: FC<Props> = ({ title, onBackPress }) => {
       <CustomText
         title={title}
         color="#fff"
-        fontSize={fonts.h1}
+        fontSize={fonts.h2}
         fontWeight="bold"
         alignSelf="center"
+        marginTop={2}
       />
     </View>
   );

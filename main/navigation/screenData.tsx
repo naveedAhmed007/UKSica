@@ -1,14 +1,11 @@
 import Login from "../screens/Login";
 import SurveyForm from "../screens/SurveyForm";
+import SurveyForm2 from "../screens/SurveyForm2";
 import UserTypesScreen from "../screens/UserTypesScreen";
 import { screenNames } from "./screenNames";
 
-type ScreenData = {
-    name: string;
-    component: React.LazyExoticComponent<React.FC>;
-  };
 
-  
+
 
 
 
@@ -24,5 +21,9 @@ export const screenData = [
     {
         name: screenNames.form1,
         component: SurveyForm,
+    },
+    {
+        name: screenNames.form2,
+        component: SurveyForm2,
     },
 ];

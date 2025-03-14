@@ -8,10 +8,12 @@ import { screenNames } from '../navigation/screenNames';
 const UserTypesScreen = () => {
   const focused: any = useIsFocused();
   const navigation: any = useNavigation();
-  const goToSurvey=useCallback(()=>{
-    navigation.navigate(screenNames.form1)
+  const goToSurvey = useCallback((type: string) => {
+
+    navigation.navigate(type == headings.form1 ? screenNames.form1 : screenNames.form2)
   },
-  [navigation])
+
+    [navigation])
   useEffect(() => {
     if (focused) {
       navigation.setOptions({
@@ -37,7 +39,7 @@ const UserTypesScreen = () => {
       {/* Buttons Row */}
       <View style={styles.buttonRow}>
         {/* Button 1 */}
-        <TouchableOpacity style={styles.userButton} onPress={goToSurvey}>
+        <TouchableOpacity style={styles.userButton} onPress={goToSurvey.bind(null, headings.form1)}>
           <AntDesign name="form" size={fonts.logoHh1} color={colors.white} />
           <CustomText title={headings.form1} color={colors.white}
             fontSize={fonts.h3}
@@ -49,8 +51,8 @@ const UserTypesScreen = () => {
         </TouchableOpacity>
 
         {/* Button 2 */}
-        <TouchableOpacity style={styles.userButton} onPress={goToSurvey}>
-        <AntDesign name="form" size={fonts.logoHh1} color={colors.white} />
+        <TouchableOpacity style={styles.userButton} onPress={goToSurvey.bind(null, headings.form2)}>
+          <AntDesign name="form" size={fonts.logoHh1} color={colors.white} />
           <CustomText title={headings.form2} color={colors.white}
             fontSize={fonts.h3}
             fontWeight={'bold'}
@@ -79,21 +81,21 @@ const styles = StyleSheet.create({
   },
 
   buttonRow: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     justifyContent: 'space-between',
     width: '80%',
   },
   userButton: {
-    backgroundColor: colors.userButtonColors, 
+    backgroundColor: colors.userButtonColors,
     borderRadius: moderateScale(20),
     width: '45%',
     paddingVertical: moderateScale(30),
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5, 
-    shadowColor: '#000', 
+    elevation: 5,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2, 
+    shadowOpacity: 0.2,
     shadowRadius: moderateScale(5),
   },
 
