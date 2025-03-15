@@ -16,6 +16,18 @@ const placeholders = {
     selectDob: "Select DOB (YYYY-MM-DD)",
     selectnationality: "Select Nationality / Ethnicity",
     EnterAddress: "Enter address",
+    EnterPhone: "Enter phone number",
+    EnterEmail: "Enter email",
+    EnterCompany:"Business/Org Affiliation",
+    enterVehicleDetails:"Enter vehicle details",
+    EnterSpokenLanguage:"Enter spoken language(s)",
+    AddressSiteDetails:"Address/Site Details",
+    selectDateOf: "Select Date/Time",
+    selectTypeLocation:"Select type of location",
+    detailedNarrative:"Detailed narrative of what was observed/reported",
+    enterDescription:"Enter Description",
+
+    
 
 
 }

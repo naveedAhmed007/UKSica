@@ -1162,7 +1162,7 @@ const SurveyForm = () => {
                   onValueChange={handleIssues}
                 />
               </View>
-              {selectedIssues === 'Yes' && (
+              {selectedIssues.label == 'Yes' && (
 
                 <TextInput
                   style={styles.textInput}

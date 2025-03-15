@@ -14,4 +14,6 @@ export const colors={
     loginText1Color:"#E52553",
     borderColor:'#ccc',
     userButtonColors:"#ff4500",
+    searchContainerBackgroundColor:"#F8F8FF",
+    subHeaderColor:"#1E3A8A",
 }

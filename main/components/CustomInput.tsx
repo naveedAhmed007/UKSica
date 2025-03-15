@@ -35,6 +35,8 @@ interface props {
     placeholderTextColor?: string,
     height?: number,
     secureTextEntry?:boolean,
+    keyboardType?: "default" | "email-address" | "numeric" | "phone-pad" 
+    | "decimal-pad" | "number-pad" | "url";
 
 
 
@@ -65,6 +67,7 @@ const CustomTextInput: FC<props> = ({ placeholder,
     placeholderTextColor = "#D3D3D3",
     height = 50,
     secureTextEntry=false,
+    keyboardType="default",
 
 
 
@@ -105,6 +108,7 @@ const CustomTextInput: FC<props> = ({ placeholder,
             editable={editable}
             placeholderTextColor={placeholderTextColor}
             secureTextEntry={secureTextEntry}
+            keyboardType={keyboardType}
 
         />
     );

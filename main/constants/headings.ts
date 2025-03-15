@@ -46,7 +46,17 @@ const headings={
     businessAffiliation: "Business/Organisation Affiliation",
     vehicleDetails: "Vehicle Details",
     subjectInformation:"Subject Information (if available)",
-  
+    languageSpoken:"Language(s) Spoken",
+    SuspectedVictim:"Suspected Victim(s)",
+    vulnerableCharacteristics:"Vulnerable Characteristics",
+
+    LocationIncidentDetails: "Location/Incident Details",
+    LocationOfSuspectedExploitation: "Location of Suspected Exploitation",
+DateTimeOfSuspectedExploitation: "Date(s)/Time(s) of Suspected Exploitation",
+    TypeOfLocation: "Type of Location",
+    DescriptionOfIncident: "Description of Incident/Observation",
+
+    
 
 
 
