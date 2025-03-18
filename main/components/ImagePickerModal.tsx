@@ -8,17 +8,19 @@ import fonts from '../utils/fonts';
 interface ImagePickerModalProps {
     isVisible: boolean;
     onClose: () => void;
-    openCamera:()=>void;
-    openGallery:()=>void;
+    openCamera: () => void;
+    openGallery: () => void;
+    openDocument?: () => void,
+    isDocumnet?: boolean,
 }
 
 const { width } = Dimensions.get('window');
 
-const ImagePickerModal: React.FC<ImagePickerModalProps> = ({ isVisible, onClose,openCamera,openGallery }) => {
-    
+const ImagePickerModal: React.FC<ImagePickerModalProps> = ({ isVisible, onClose, openCamera, openGallery, openDocument = () => { }, isDocumnet = false }) => {
 
-    
-    
+
+
+
     return (
         <Modal
             animationType="slide"
@@ -29,7 +31,7 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({ isVisible, onClose,
             <View style={styles.modalBackground}>
                 <View style={styles.modalContent}>
                     <View style={styles.header}>
-                        <Text style={[styles.selectOptionText,{flex:1}]}>Choose an option</Text>
+                        <Text style={[styles.selectOptionText, { flex: 1 }]}>Choose an option</Text>
 
                         <TouchableOpacity style={styles.closeModalButton} onPress={onClose}>
                             <Icon name="times" size={20} color={colors.white} />
@@ -45,11 +47,19 @@ const ImagePickerModal: React.FC<ImagePickerModalProps> = ({ isVisible, onClose,
                         </TouchableOpacity>
 
                         {/* Gallery Card */}
-                        <TouchableOpacity style={[styles.optionCard,{marginLeft:moderateScale(20)}]} onPress={openGallery}>
+                        {isDocumnet == false && <TouchableOpacity style={[styles.optionCard, { marginLeft: moderateScale(20) }]} onPress={openGallery}>
                             <Icon name="image" size={30} color={colors.headerColor} />
                             <Text style={styles.cardText}>Gallery</Text>
+                        </TouchableOpacity>}
+
+                        {isDocumnet == true && <TouchableOpacity style={[styles.optionCard, { marginLeft: moderateScale(20) }]} onPress={openDocument}>
+                            <Icon name="file" size={30} color={colors.headerColor} />
+                            <Text style={styles.cardText}>Document</Text>
                         </TouchableOpacity>
+                        }
                     </View>
+
+
 
                 </View>
             </View>
@@ -67,8 +77,8 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: 'white',
         borderRadius: moderateScale(10),
-        paddingHorizontal:moderateScale(20),
-        paddingVertical:moderateScale(20),
+        paddingHorizontal: moderateScale(20),
+        paddingVertical: moderateScale(20),
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.85,
@@ -82,11 +92,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-  
+
     selectOptionText: {
         fontSize: fonts.h2,
         color: colors.gray,
-        marginBottom:moderateScale(10), 
+        marginBottom: moderateScale(10),
     },
     optionCards: {
         flexDirection: 'row',
@@ -99,9 +109,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#f0f0f0',
         borderRadius: moderateScale(10),
-        width:moderateScale(120),
-        height:moderateScale(100),
-        elevation: 5, 
+        width: moderateScale(120),
+        height: moderateScale(100),
+        elevation: 5,
         shadowColor: '#000', // iOS shadow
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.2,
@@ -114,8 +124,8 @@ const styles = StyleSheet.create({
     },
     header:
     {
-        flexDirection:'row',
-        
+        flexDirection: 'row',
+
     }
 
 });

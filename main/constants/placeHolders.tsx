@@ -18,16 +18,40 @@ const placeholders = {
     EnterAddress: "Enter address",
     EnterPhone: "Enter phone number",
     EnterEmail: "Enter email",
-    EnterCompany:"Business/Org Affiliation",
-    enterVehicleDetails:"Enter vehicle details",
-    EnterSpokenLanguage:"Enter spoken language(s)",
-    AddressSiteDetails:"Address/Site Details",
+    EnterCompany: "Business/Org Affiliation",
+    enterVehicleDetails: "Enter vehicle details",
+    EnterSpokenLanguage: "Enter spoken language(s)",
+    AddressSiteDetails: "Address/Site Details",
     selectDateOf: "Select Date/Time",
-    selectTypeLocation:"Select type of location",
-    detailedNarrative:"Detailed narrative of what was observed/reported",
-    enterDescription:"Enter Description",
+    selectDate: "Select Date",
+    selectTypeLocation: "Select type of location",
+    detailedNarrative: "Detailed narrative of what was observed/reported",
+    enterDescription: "Enter Description",
+    addFiles: "Add files",
+    EnterAnyOtherRelevantInformation: "Entet any other relevant information",
+    SelectAssessmentofRisk: "Select Assessment of Risk",
+    "justification": "Enter justification",
+    SelectLikelyFormofExploitation: "Select a likely form of exploitation",
+    crimeLinks: "Potential links to organised crime (if any)",
+    SelectexternalReporting: "Select External Reporting",
+    SelectinternalAction: "Select Internal Action",
+    listPeople: "List of people that should not be contacted",
+    enterSafeguardingMeasures: "Enter safeguarding measures",
+    EnterAgencyName: "Enter agency name or organisation",
+    DescribeTheOutcome: "Describe the outcome or action taken",
+    EnterReferenceNumber: "Enter reference number (if provided)",
+    enterSign: "Enter signature or electronic signature",
+    EnterReviewerName: "Enter reviewer name and position",
+    enterOfficerName: "Enter officer name or id",
+    enterCompany: "Enter company name",
+    enterClientName:"Enter client Name"
 
-    
+
+
+
+
+
+
 
 
 }
