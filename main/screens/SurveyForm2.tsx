@@ -2061,7 +2061,7 @@ const SurveyForm2 = () => {
                         </View>
                         <View style={styles.formGroup}>
                             <CustomText
-                                title={headings.internalAction}
+                                title={headings.externalReporting}
                                 color={colors.gray}
                                 fontSize={fonts.p}
                                 fontWeight="400"
@@ -2131,7 +2131,7 @@ const SurveyForm2 = () => {
                         {/* Reporting to External Agencies */}
 
                         <CustomText
-                            title={headings.Recommendations}
+                            title={headings.ReportingToExternalAgencies}
                             color={colors.subHeaderColor}
                             fontSize={fonts.h3}
                             marginBottom={15}
