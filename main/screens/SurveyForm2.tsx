@@ -869,7 +869,7 @@ const SurveyForm2 = () => {
     const onChangePhone = useCallback((newText: string) => {
         setPhone(newText)
 
-    }, [address]);
+    }, [phone]);
     const onChangeEmail = useCallback((newText: string) => {
         setEmail(newText)
 
@@ -899,7 +899,7 @@ const SurveyForm2 = () => {
     const onChangeVictimPhone = useCallback((newText: string) => {
         setVictimPhone(newText)
 
-    }, [victimAddress]);
+    }, [victimPhone]);
     const onChangeVictimEmail = useCallback((newText: string) => {
         setVictimEmail(newText)
 
