@@ -1771,7 +1771,7 @@ const SurveyForm2 = () => {
                         <WorkingConditions
                             title={headings.isolationFromOthers}
                             selectedValue={isolation}
-                            onValueChange={setIsolation}
+                            onValueChange={handleIsolation}
                             details={isolationDetails}
                             setDetails={setIsolationDetails}
                         />
