@@ -5,11 +5,11 @@ import CustomInput from "../components/CustomInput";
 import CustomNumberPicker from "../components/CustomNumberPicker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {
-    AntDesign, colors, FlatList, fonts,
-    headings, Icon, Image, ImagePickerResponse,
-    KeyboardAwareScrollView, launchCamera, launchImageLibrary, moderateScale,
+    colors, fonts,
+    headings, Image,
+    KeyboardAwareScrollView, moderateScale,
     placeholders, StyleSheet, TextInput, TouchableOpacity,
-    uuid, View, Text, findNodeHandle, Dimensions,
+    View, Text, findNodeHandle, Dimensions,
     moment,
 
 } from "../utils/imports";
@@ -23,7 +23,10 @@ import Loader from "../components/Loader";
 import { screenNames } from "../navigation/screenNames";
 import CountryPickerModal from "../components/CountryPickerModal";
 import CheckboxGroup from "../components/CheckboxGroup";
-import { exploitationTypes, externalReporting, internalAction, locationTypes, radioOptions3, radioOptionsYNU, riskLevels, victimOptions } from "../utils/Options";
+import {
+    exploitationTypes, externalReporting, internalAction, locationTypes, radioOptions3,
+    riskLevels, victimOptions
+} from "../utils/Options";
 import RadioGroup from "../components/RadioGroup";
 import PickerComponent from "../components/DropDownPicker";
 import WorkingConditions from "../components/WorkingConditions";
@@ -568,7 +571,7 @@ const SurveyForm2 = () => {
 
 
             }
-           
+
             else if (location.trim().length <= 0) {
 
                 setLocationError(true);
@@ -636,7 +639,7 @@ const SurveyForm2 = () => {
 
 
             }
-           
+
 
 
 
@@ -783,7 +786,7 @@ const SurveyForm2 = () => {
         documentsRecords, anyOtherRelevantInformation, selectedRiskLevelValue,
         errorRiskLevel, crime, selectedIssues, selectedPickerExploitationValue, selectedPickerInternalValue, selectedPickerExternalValue,
         safeGuardMeasures, listPeople, reference, action, selectedDateTime, agency, reviewer, selectedDateReviewer, signature, comp, officer,
-        companyError, officerError,client,
+        companyError, officerError, client,
 
 
 
@@ -1071,57 +1074,57 @@ const SurveyForm2 = () => {
                     </View>
 
                     <View style={styles.formGroup}>
-                                <CustomText
-                                    title={headings.ClientName}
-                                    color={colors.gray}
-                                    fontSize={fonts.p}
-                                    fontWeight="400"
-                                    marginBottom={5}
-                                />
+                        <CustomText
+                            title={headings.ClientName}
+                            color={colors.gray}
+                            fontSize={fonts.p}
+                            fontWeight="400"
+                            marginBottom={5}
+                        />
 
-                                <CustomInput
-                                    placeholder={placeholders.enterClientName}
-                                    backgroundColor={colors.white}
-                                    borderRadius={10}
-                                    paddingLeft={10}
-                                    paddingRight={10}
-                                    paddingTop={10}
-                                    paddingBottom={10}
-                                    borderColor={colors.TextInputBorderColor}
-                                    borderWidth={1}
-                                    onChangeText={onChangeClient}
-                                    value={client}
-                                    error={false}
-                                />
+                        <CustomInput
+                            placeholder={placeholders.enterClientName}
+                            backgroundColor={colors.white}
+                            borderRadius={10}
+                            paddingLeft={10}
+                            paddingRight={10}
+                            paddingTop={10}
+                            paddingBottom={10}
+                            borderColor={colors.TextInputBorderColor}
+                            borderWidth={1}
+                            onChangeText={onChangeClient}
+                            value={client}
+                            error={false}
+                        />
 
-                            </View>
+                    </View>
 
-                            <View style={styles.formGroup}>
-                                <CustomText
-                                    title={headings.DateofReport}
-                                    color={colors.gray}
-                                    fontSize={fonts.p}
-                                    fontWeight="400"
-                                    marginBottom={5}
-                                />
+                    <View style={styles.formGroup}>
+                        <CustomText
+                            title={headings.DateofReport}
+                            color={colors.gray}
+                            fontSize={fonts.p}
+                            fontWeight="400"
+                            marginBottom={5}
+                        />
 
-                                <CustomInput
-                                    placeholder={placeholders.enterClientName}
-                                    backgroundColor={colors.white}
-                                    borderRadius={10}
-                                    paddingLeft={10}
-                                    paddingRight={10}
-                                    paddingTop={10}
-                                    editable={false}
-                                    paddingBottom={10}
-                                    borderColor={colors.TextInputBorderColor}
-                                    borderWidth={1}
-                                    onChangeText={onChangeClient}
-                                    value={moment().format("YYYY-MM-DD") }
-                                    error={false}
-                                />
+                        <CustomInput
+                            placeholder={placeholders.enterClientName}
+                            backgroundColor={colors.white}
+                            borderRadius={10}
+                            paddingLeft={10}
+                            paddingRight={10}
+                            paddingTop={10}
+                            editable={false}
+                            paddingBottom={10}
+                            borderColor={colors.TextInputBorderColor}
+                            borderWidth={1}
+                            onChangeText={onChangeClient}
+                            value={moment().format("YYYY-MM-DD")}
+                            error={false}
+                        />
 
-                            </View>
+                    </View>
 
 
 
